@@ -14,11 +14,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Master {
-  id           Int      @id @default(autoincrement())
-  name         String
-  email        String   @unique
-  cpf          String   @unique
-  token_access BigInt?  
-  createdAt    DateTime @default(now())
+model master {
+  id             Int      @id @default(autoincrement())
+  name           String
+  email          String   @unique
+  cpf            String   @unique
+  token_access  String?
+  code_expires_at  DateTime?
+  code_used       Boolean  @default(false)
+  created_at      DateTime @default(now())
 }
