@@ -15,12 +15,35 @@ datasource db {
 }
 
 model master {
-  id             Int      @id @default(autoincrement())
-  name           String
-  email          String   @unique
-  cpf            String   @unique
-  token_access  String?
-  code_expires_at  DateTime?
-  code_used       Boolean  @default(false)
-  created_at      DateTime @default(now())
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  cpf             String    @unique
+  token_access    String?
+  code_expires_at DateTime?
+  code_used       Boolean   @default(false)
+  created_at      DateTime  @default(now())
+}
+
+model project {
+  id                 Int            @id @default(autoincrement())
+  name               String
+  number_contract    String         @unique
+  description        String
+  estimated_price    Decimal        @db.Decimal(16, 2)
+  start_date         DateTime
+  estimated_end_date DateTime
+  status             status_project @default(planned)
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @default(now())
+
+  @@index([start_date, estimated_end_date])
+  @@map("project")
+}
+
+enum status_project {
+  planned
+  active
+  completed
+  canceled
 }

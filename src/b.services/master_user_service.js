@@ -47,7 +47,7 @@ async function validate_token(email, token) {
             }
         if(isMatch){
 
-            const JWT_SECRET = process.env.JWT_SECRET || "chave-muitooooo-secreta"; // defina no seu .env
+            const JWT_SECRET = process.env.JWT_SECRET || "chave-muitooooo-secreta";
 
     const tokenJwt = jwt.sign(
       {
