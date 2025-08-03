@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -25,17 +19,28 @@ model master {
   created_at      DateTime  @default(now())
 }
 
+model firm {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  cnpj     String    @unique
+  projects project[] // relation 1:N
+}
+
 model project {
-  id                 Int            @id @default(autoincrement())
-  name               String
-  number_contract    String         @unique
-  description        String
-  estimated_price    Decimal        @db.Decimal(16, 2)
-  start_date         DateTime
-  estimated_end_date DateTime
-  status             status_project @default(planned)
-  created_at         DateTime       @default(now())
-  updated_at         DateTime       @default(now())
+  id                   Int             @id @default(autoincrement())
+  name                 String
+  number_contract      String          @unique
+  description          String
+  estimated_price      Decimal         @db.Decimal(16, 2)
+  start_date           DateTime
+  estimated_end_date   DateTime
+  status               status_project  @default(planned)
+  created_at           DateTime        @default(now())
+  updated_at           DateTime        @updatedAt
+  firm_id              Int
+  firm                 firm            @relation(fields: [firm_id], references: [id])
+  responsible_contract String
 
   @@index([start_date, estimated_end_date])
   @@map("project")

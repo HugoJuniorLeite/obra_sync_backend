@@ -1,5 +1,7 @@
 import prisma from "../database/prismaClient.js";
 
+
+//Valida se o id do contrato já está cadastrado.
 async function verify_project_exists(number_contract) {
     
     try {
@@ -11,7 +13,7 @@ async function verify_project_exists(number_contract) {
         
     }
 }
-
+//Valida se já existe um projeto com o mesmo nome cadastrado
 async function name_project_exists(project_name) {
     try {
         return prisma.project.findFirst({
@@ -22,8 +24,10 @@ async function name_project_exists(project_name) {
         throw new Error(error.message);
     }
 }
-
+//Cadastra um novo projeto
 async function create_project(data) {
+  
+    
     try {
         return prisma.project.create({
             data: {
@@ -32,7 +36,9 @@ async function create_project(data) {
       description: data.description,
       estimated_price: data.estimated_price,
       start_date : data.start_date,
-      estimated_end_date: data.estimated_end_date
+      estimated_end_date: data.estimated_end_date,
+      responsible_contract: data.responsible_contract,
+      firm_id:Number(data.firm_id)
             }
         })
         
@@ -42,7 +48,7 @@ async function create_project(data) {
     }
 }
 
-
+//Retorna todos os projetos cadastrados
 async function get_all_projects() {
     try {
        return prisma.project.findMany({
@@ -53,6 +59,7 @@ async function get_all_projects() {
     }
 }
 
+//Retorna o projeto pelo id
 async function get_project_by_id(project_id) {
     try {
         return prisma.project.findFirst({
@@ -64,6 +71,7 @@ async function get_project_by_id(project_id) {
     }
 }
 
+//Retorna o projeto pelo status
 async function get_project_by_status(status){
     try {
         return prisma.project.findMany({

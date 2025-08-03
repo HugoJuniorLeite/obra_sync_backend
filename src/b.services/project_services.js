@@ -1,4 +1,6 @@
 import project_repository from "../c.repositories/project_repository.js";
+import firm_repository from "../c.repositories/firm_repository.js"
+
 
 async function create_project_service(data) {
     
@@ -6,15 +8,19 @@ async function create_project_service(data) {
         if (!data || data === null) {
             throw new Error("Campos obrigatórios");
           }
+    const firm_exists = await firm_repository.get_firm_by_id(data.firm_id)
        const contract_exists = await project_repository.verify_project_exists(data.number_contract)
     const name_contracts_exists = await project_repository.name_project_exists(data.name) 
     console.log(contract_exists, "contracts");
-    
+    if (!firm_exists) {
+        throw new Error("Empresa não cadastrada");
+        
+    }
     if (contract_exists || name_contracts_exists) {
         throw new Error("Conflito. Contrato já cadastrado");
             }
 await project_repository.create_project(data)
-
+return
     } catch (error) {
         throw new Error(error.message);
         

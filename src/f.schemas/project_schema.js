@@ -58,7 +58,22 @@ export const project_schema = Joi.object({
       'date.base': 'A data estimada de término deve ser uma data válida.',
       'date.greater': 'A data de término deve ser depois da data de início.',
       'any.required': 'A data estimada de término é obrigatória.'
-    })
+    }),
+    "responsible_contract": Joi.string()
+     .max(1000)
+    .allow(null, '')
+    .messages({
+      'string.base': 'A descrição deve ser um texto.',
+      'string.max': 'A descrição deve ter no máximo {#limit} caracteres.'
+    }),
+  "firm_id": Joi.number()
+    .positive()
+    .required()
+    .messages({
+      'number.base': 'O id da empresa deve ser numérico.',
+      'number.positive': 'O id da empresa deve ser maior que zero.',
+      'any.required': 'O id da empresa é obrigatório.'
+    }),
 });
 
 export const status_params = Joi.object({
