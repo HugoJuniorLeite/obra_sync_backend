@@ -43,7 +43,26 @@ res.status(200).send(selected_project);
    
 }
 
+async function get_project_by_status_controller(req, res) {
+    const status = req.params.status;
+    console.log(status, "status");
+    
+if (!status || status === null || status === undefined) {
+    return res.status(400).send("Status inválido")
+}
+    try {
+        const filtered_projects = await project_service.get_project_by_status(status);
+if (filtered_projects.length === 0) {
+    res.status(200).send("Nenhum projeto cadastrado nessa opção")
+}
+
+        res.status(200).send(filtered_projects);
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message});  
+    }
+}
+
 const project_controller = {
-    create_project_controller, get_all_projects_controller, get_project_by_id_controller
+    create_project_controller, get_all_projects_controller, get_project_by_id_controller, get_project_by_status_controller
 }
 export default project_controller;

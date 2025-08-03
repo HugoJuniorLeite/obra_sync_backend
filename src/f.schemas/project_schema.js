@@ -60,3 +60,7 @@ export const project_schema = Joi.object({
       'any.required': 'A data estimada de término é obrigatória.'
     })
 });
+
+export const status_params = Joi.object({
+  status: Joi.string().required()
+})

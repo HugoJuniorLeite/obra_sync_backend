@@ -45,8 +45,18 @@ async function get_project_by_id_service (project_id){
         
     }
 }
+
+async function get_project_by_status(status) {
+    
+    try {
+        const filtered_projects = await project_repository.get_project_by_status(status)
+   return filtered_projects
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
 const project_service = {
-    create_project_service, get_all_projects_service,get_project_by_id_service
+    create_project_service, get_all_projects_service,get_project_by_id_service, get_project_by_status
 }
 
 export default project_service
