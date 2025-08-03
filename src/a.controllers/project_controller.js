@@ -62,7 +62,17 @@ if (filtered_projects.length === 0) {
     }
 }
 
+async function get_project_by_firm_id_controller(req, res) {
+    const firm_id = req.params.firm_id;
+    try {
+        const project_by_firm = await project_service.get_project_by_firm_id_service(firm_id);
+   res.status(200).send(project_by_firm);
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message});  
+    }
+}
+
 const project_controller = {
-    create_project_controller, get_all_projects_controller, get_project_by_id_controller, get_project_by_status_controller
+    create_project_controller, get_all_projects_controller, get_project_by_id_controller, get_project_by_status_controller, get_project_by_firm_id_controller
 }
 export default project_controller;

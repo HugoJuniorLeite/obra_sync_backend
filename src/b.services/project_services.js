@@ -11,7 +11,7 @@ async function create_project_service(data) {
     const firm_exists = await firm_repository.get_firm_by_id(data.firm_id)
        const contract_exists = await project_repository.verify_project_exists(data.number_contract)
     const name_contracts_exists = await project_repository.name_project_exists(data.name) 
-    console.log(contract_exists, "contracts");
+   
     if (!firm_exists) {
         throw new Error("Empresa não cadastrada");
         
@@ -61,8 +61,28 @@ async function get_project_by_status(status) {
         throw new Error(error.message);
     }
 }
+
+async function get_project_by_firm_id_service(firm_id) {
+    try {
+        const firm_exists = await firm_repository.get_firm_by_id(firm_id);
+         if (!firm_exists) {
+        throw new Error("Empresa não cadastrada");
+        
+    }
+      const project_by_firm = await project_repository.get_project_by_firm_id(firm_id)  
+    if (project_by_firm.length === 0) {
+        throw new Error("Não há projetos cadastrados para essa empresa");
+        
+    }
+    
+      return project_by_firm
+    } catch (error) {
+        throw new Error(error.message);
+        
+    }
+}
 const project_service = {
-    create_project_service, get_all_projects_service,get_project_by_id_service, get_project_by_status
+    create_project_service, get_all_projects_service,get_project_by_id_service, get_project_by_status, get_project_by_firm_id_service
 }
 
 export default project_service

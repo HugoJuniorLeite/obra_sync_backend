@@ -83,7 +83,19 @@ async function get_project_by_status(status){
     }
 }
 
+async function get_project_by_firm_id(firm_id) {
+    try {
+       return prisma.project.findMany({
+        where:{
+            firm_id: Number(firm_id)
+        }
+       }) 
+    } catch (error) {
+        throw new Error(error.message);
+        
+    }
+}
 const project_repository = {
-    verify_project_exists, create_project, name_project_exists, get_all_projects, get_project_by_id, get_project_by_status}
+    verify_project_exists, create_project, name_project_exists, get_all_projects, get_project_by_id, get_project_by_status, get_project_by_firm_id}
 
 export default project_repository;

@@ -8,5 +8,6 @@ project_router.post("/add-project", validateBody(project_schema),project_control
 project_router.get("/all-projects", project_controller.get_all_projects_controller);
 project_router.get("/project-by-id/:project_id", project_controller.get_project_by_id_controller)
 project_router.get("/projects-by-status/:status", project_controller.get_project_by_status_controller);
+project_router.get("/project-by-firm/:firm_id", project_controller.get_project_by_firm_id_controller)
 
 export default project_router
