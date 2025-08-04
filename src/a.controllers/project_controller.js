@@ -72,7 +72,31 @@ async function get_project_by_firm_id_controller(req, res) {
     }
 }
 
+async function update_project_by_id(req, res) {
+    const data = req.body
+    const project_id = req.params.project_id
+
+console.log(project_id, "project_id", req.body, "data", data);
+
+    try {
+        await project_service.update_project(data, project_id)
+        res.status(200).send("Dados alterados com sucesso")
+    } catch (error) {
+       return res.status(error.status || 400).json({message: error.message});      
+    }
+}
+
+async function deactivate_project_controller(req, res) {
+    const project_id = req.params.project_id;
+      try {
+        await project_service.deactivate_project_service(project_id)
+        res.status(200).send("Cadastro excluído com sucesso")
+    } catch (error) {
+       return res.status(error.status || 400).json({message: error.message});      
+    }
+}
+
 const project_controller = {
-    create_project_controller, get_all_projects_controller, get_project_by_id_controller, get_project_by_status_controller, get_project_by_firm_id_controller
+    create_project_controller, get_all_projects_controller, get_project_by_id_controller, get_project_by_status_controller, get_project_by_firm_id_controller, update_project_by_id, deactivate_project_controller
 }
 export default project_controller;

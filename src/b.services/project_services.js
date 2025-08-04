@@ -80,9 +80,50 @@ async function get_project_by_firm_id_service(firm_id) {
         throw new Error(error.message);
         
     }
+    
 }
+
+
+async function update_project(data, project_id) {
+    console.log(project_id, data, "service");
+    
+      try {
+        const selected_project = await project_repository.get_project_by_id(project_id);
+       console.log(selected_project, "service");
+       
+        if (selected_project === null || !selected_project) {
+        throw new Error("Projeto não encontrado");
+      }
+      await project_repository.update_project_id(project_id, data);
+        return 
+    } catch (error) {
+        throw new Error(error.message);
+        
+    }}
+
+    async function deactivate_project_service(project_id) {
+        if (!project_id || project_id === undefined) {
+            throw new Error("Obrigatório inserir um Id válido");
+                    }
+        try {
+
+        const selected_project = await project_repository.get_project_by_id(project_id);
+       console.log(selected_project, "selected_project");
+       
+        if (selected_project === null || !selected_project) {
+        throw new Error("Projeto não encontrado");
+      }
+
+            await project_repository.deactivate_project(project_id);
+            return
+        } catch (error) {
+            throw new Error(error.message);
+            
+        }
+    }
+
 const project_service = {
-    create_project_service, get_all_projects_service,get_project_by_id_service, get_project_by_status, get_project_by_firm_id_service
+    create_project_service, get_all_projects_service,get_project_by_id_service, get_project_by_status, get_project_by_firm_id_service, update_project, deactivate_project_service
 }
 
 export default project_service
