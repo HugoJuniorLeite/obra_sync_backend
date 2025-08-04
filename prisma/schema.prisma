@@ -24,8 +24,9 @@ model firm {
   name     String
   email    String    @unique
   cnpj     String    @unique
-  projects project[] // relation 1:N
-}
+  active   Boolean   @default(true)
+  projects project[] 
+  }
 
 model project {
   id                   Int             @id @default(autoincrement())
@@ -41,7 +42,7 @@ model project {
   firm_id              Int
   firm                 firm            @relation(fields: [firm_id], references: [id])
   responsible_contract String
-
+  active   Boolean   @default(true)
   @@index([start_date, estimated_end_date])
   @@map("project")
 }
