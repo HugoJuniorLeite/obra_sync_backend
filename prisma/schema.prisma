@@ -25,26 +25,38 @@ model firm {
   email    String    @unique
   cnpj     String    @unique
   active   Boolean   @default(true)
-  projects project[] 
-  }
+  projects project[]
+}
 
 model project {
-  id                   Int             @id @default(autoincrement())
+  id                   Int            @id @default(autoincrement())
   name                 String
-  number_contract      String          @unique
+  number_contract      String         @unique
   description          String
-  estimated_price      Decimal         @db.Decimal(16, 2)
+  estimated_price      Decimal        @db.Decimal(16, 2)
   start_date           DateTime
   estimated_end_date   DateTime
-  status               status_project  @default(planned)
-  created_at           DateTime        @default(now())
-  updated_at           DateTime        @updatedAt
+  status               status_project @default(planned)
+  created_at           DateTime       @default(now())
+  updated_at           DateTime       @updatedAt
   firm_id              Int
-  firm                 firm            @relation(fields: [firm_id], references: [id])
+  firm                 firm           @relation(fields: [firm_id], references: [id])
   responsible_contract String
-  active   Boolean   @default(true)
+  active               Boolean        @default(true)
+  services             service[]
+
   @@index([start_date, estimated_end_date])
   @@map("project")
+}
+
+model service {
+  id             Int     @id @default(autoincrement())
+  name           String
+  description    String
+  price          Decimal @db.Decimal(16, 2)
+  project_id     Int
+  project        project @relation(fields: [project_id], references: [id])
+  active         Boolean        @default(true)
 }
 
 enum status_project {
