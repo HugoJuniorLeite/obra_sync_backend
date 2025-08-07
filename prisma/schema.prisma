@@ -44,19 +44,23 @@ model project {
   responsible_contract String
   active               Boolean        @default(true)
   services             service[]
+  project_team         project_team[]
+  salary               salary[]
 
   @@index([start_date, estimated_end_date])
   @@map("project")
 }
 
 model service {
-  id             Int     @id @default(autoincrement())
-  name           String
-  description    String
-  price          Decimal @db.Decimal(16, 2)
-  project_id     Int
-  project        project @relation(fields: [project_id], references: [id])
-  active         Boolean        @default(true)
+  id          Int         @id @default(autoincrement())
+  name        String
+  description String
+  price       Decimal     @db.Decimal(16, 2)
+  project_id  Int
+  project     project     @relation(fields: [project_id], references: [id])
+  active      Boolean     @default(true)
+  technical   technical[]
+  salary      salary[]
 }
 
 enum status_project {
@@ -64,4 +68,103 @@ enum status_project {
   active
   completed
   canceled
+}
+
+model employee {
+  id              Int            @id @default(autoincrement())
+  name            String
+  date_of_birth   DateTime       @db.Date
+  rg              String
+  cpf             String         @unique
+  drivers_license Boolean
+  occupation_id   Int
+  admission_date  DateTime       @db.Date
+  password_hash   String?
+  address         address?
+  cnhs            cnh[]
+  occupation      occupation     @relation(fields: [occupation_id], references: [id])
+  phones          phone[]
+  project_team    project_team[]
+  technical       technical[]
+  active          Boolean        @default(true)
+
+  @@map("employee")
+}
+
+model phone {
+  id          Int      @id @default(autoincrement())
+  phoneNumber String
+  employee_id Int
+  employee    employee @relation(fields: [employee_id], references: [id])
+
+  @@map("phone")
+}
+
+model cnh {
+  id                    Int      @id @default(autoincrement())
+  employee_id           Int
+  number_license        String
+  validity              DateTime @db.Date
+  first_drivers_license DateTime @db.Date
+  category_cnh          String?
+  employee              employee @relation(fields: [employee_id], references: [id])
+
+  @@map("cnh")
+}
+
+model project_team {
+  id          Int      @id @default(autoincrement())
+  project_id  Int
+  employee_id Int
+  active      Boolean
+  project     project  @relation(fields: [project_id], references: [id])
+  employee    employee @relation(fields: [employee_id], references: [id])
+
+  @@map("project_team")
+}
+
+model technical {
+  id             Int      @id @default(autoincrement())
+  employee_id    Int
+  service_id     Int
+  active         Boolean
+  createdAt      DateTime @default(now())
+  technical_name String?
+  employee       employee @relation(fields: [employee_id], references: [id])
+  service        service  @relation(fields: [service_id], references: [id])
+
+  @@map("technical")
+}
+
+model address {
+  id              Int      @id @default(autoincrement())
+  zip_code        String?
+  street_name     String?
+  number_of_house Int
+  city            String
+  state           String
+  country         String
+  employee_id     Int      @unique
+  neighborhood    String?
+  employee        employee @relation(fields: [employee_id], references: [id])
+
+  @@map("address")
+}
+
+model salary {
+  id         Int     @id @default(autoincrement())
+  salary     Float?
+  project_id Int
+  service_id Int
+  project    project @relation(fields: [project_id], references: [id])
+  service    service @relation(fields: [service_id], references: [id])
+}
+
+model occupation {
+  id                        Int        @id @default(autoincrement())
+  name                      String     @unique
+  description_of_occupation String?
+  dangerousness             Boolean?
+  employees                 employee[]
+  active                    Boolean    @default(true)
 }
