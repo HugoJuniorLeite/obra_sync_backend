@@ -17,6 +17,7 @@ model master {
   code_expires_at DateTime?
   code_used       Boolean   @default(false)
   created_at      DateTime  @default(now())
+  active          Boolean   @default(true)
 }
 
 model firm {
@@ -96,6 +97,7 @@ model phone {
   phoneNumber String
   employee_id Int
   employee    employee @relation(fields: [employee_id], references: [id])
+  active      Boolean  @default(true)
 
   @@map("phone")
 }
@@ -108,6 +110,7 @@ model cnh {
   first_drivers_license DateTime @db.Date
   category_cnh          String?
   employee              employee @relation(fields: [employee_id], references: [id])
+  active                Boolean  @default(true)
 
   @@map("cnh")
 }
@@ -116,7 +119,7 @@ model project_team {
   id          Int      @id @default(autoincrement())
   project_id  Int
   employee_id Int
-  active      Boolean
+  active      Boolean  @default(true)
   project     project  @relation(fields: [project_id], references: [id])
   employee    employee @relation(fields: [employee_id], references: [id])
 
@@ -124,14 +127,15 @@ model project_team {
 }
 
 model technical {
-  id             Int      @id @default(autoincrement())
-  employee_id    Int
-  service_id     Int
-  active         Boolean
+  id          Int @id @default(autoincrement())
+  employee_id Int
+  service_id  Int
+
   createdAt      DateTime @default(now())
   technical_name String?
   employee       employee @relation(fields: [employee_id], references: [id])
   service        service  @relation(fields: [service_id], references: [id])
+  active         Boolean  @default(true)
 
   @@map("technical")
 }
@@ -147,6 +151,7 @@ model address {
   employee_id     Int      @unique
   neighborhood    String?
   employee        employee @relation(fields: [employee_id], references: [id])
+  active          Boolean  @default(true)
 
   @@map("address")
 }
@@ -158,6 +163,7 @@ model salary {
   service_id Int
   project    project @relation(fields: [project_id], references: [id])
   service    service @relation(fields: [service_id], references: [id])
+  active     Boolean @default(true)
 }
 
 model occupation {
