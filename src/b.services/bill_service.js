@@ -46,8 +46,18 @@ async function dispatch_bill_service(data, bill_id) {
         throw new Error(error.message); 
     }
 }
+
+async function get_bill_by_status(status) {
+   console.log(status);
+   
+    const bills_by_status = await bill_repository.bill_by_status(status)
+   console.log(bills_by_status);
+   
+    return bills_by_status;
+
+}
 const bill_service ={
-    create_bill_service, dispatch_bill_service
+    create_bill_service, dispatch_bill_service, get_bill_by_status, 
 }
 
 export default bill_service;

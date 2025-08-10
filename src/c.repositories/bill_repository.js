@@ -99,15 +99,25 @@ async function dispatch_bill(data, bill_id) {
 }
 
 async function bill_by_status(status) {
+  console.log(status);
+  
   try {
     return await prisma.bill.findMany({
       where: {
-        status : status
+        status: String(status)
+      },
+      include: {
+        consultant: true,
+        customer_address: true,
+        customer: true,
+        extension_address: true,
+        project: true,
+        service: true,
+        technical: true
       }
-    })
+    });
   } catch (error) {
     throw new Error(error.message);
-    
   }
 }
 
