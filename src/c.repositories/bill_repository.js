@@ -1,0 +1,129 @@
+import prisma from "../database/prismaClient.js";
+
+async function verify_customer_exists(data) {
+  return await prisma.customer.findFirst({
+    where: {
+      name: data.name,
+      phone: data.phone
+    }
+  })
+}
+async function create_customer(customer) {
+ 
+    
+  return await prisma.customer.create({
+    data: {
+      name: customer.name,
+      phone: customer.phone
+    }
+  });
+};
+
+async function create_customer_address(customer_address, customer_id) {
+       
+  return await prisma.customer_address.create({
+    data: {
+      zip_code: customer_address.zip_code,
+      street: customer_address.street,
+      neighborhood: customer_address.neighborhood,
+      city: customer_address.city,
+      state: customer_address.state,
+      customer: {
+        connect: { id: customer_id }
+      }
+    }
+  });
+}
+
+async function create_extension_address(data_extension_address, customer_id) {
+  return await prisma.extension_address.create({
+    data: {
+      zip_code: data_extension_address.zip_code,
+      street: data_extension_address.street,
+      neighborhood: data_extension_address.neighborhood,
+      city: data_extension_address.city,
+      state: data_extension_address.state,
+      customer: {
+        connect: { id: customer_id }
+      }
+    }
+  });
+}
+
+async function create_consultant(data_consultant) {
+   
+  return await prisma.consultant.create({
+    data: {
+      name: data_consultant.name,
+      phone: data_consultant.phone
+    }
+  });
+}
+
+async function create_bill(create_customer_id, create_customer_adress_id, create_extension_address_id, create_consultant_id, project_id, service_id) {
+  
+  return await prisma.bill.create({
+    data: {
+      customer_id: create_customer_id,
+      customer_address_id: create_customer_adress_id,
+      extension_address_id: create_extension_address_id,
+      consultant_id: create_consultant_id,
+      project_id: project_id,
+      service_id: service_id,
+  }
+  });
+}
+
+async function dispatch_bill(data, bill_id) {
+  try {
+    const updateData = {};
+
+    if (data.technical_id !== undefined && data.technical_id !== null) {
+      updateData.technical_id = Number(data.technical_id);
+    }
+
+    if (data.scheduled_at !== undefined && data.scheduled_at !== null) {
+      updateData.scheduled_at = new Date(data.scheduled_at);
+    }
+
+    updateData.status = "despachada";
+
+    return await prisma.bill.update({
+      where: { id: Number(bill_id) },
+      data: updateData
+    });
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function bill_by_status(status) {
+  try {
+    return await prisma.bill.findMany({
+      where: {
+        status : status
+      }
+    })
+  } catch (error) {
+    throw new Error(error.message);
+    
+  }
+}
+
+async function bill_by_id(bill_id) {
+  try {
+    return await prisma.bill.findFirst({
+      where: {
+        id: Number(bill_id)
+      }
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+const bill_repository = {
+   bill_by_status, bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
+}
+
+export default bill_repository;

@@ -43,6 +43,17 @@ async function create_employee(data) {
   });
 }
 
+async function employee_project(employee_id) {
+  try {
+    return prisma.project_team.findFirst({
+      where:{
+        employee_id:Number(employee_id)
+      }
+      });
+  } catch (error) {
+    throw new Error(error.message);
+    }
+}
 async function create_cnh(employee_id, data) {
   console.log(employee_id, data, "repository");
   
@@ -188,7 +199,7 @@ async function deactivate_employee(employee_id) {
 }
 
 const employee_repository = {
-    create_employee, create_cnh, find_employee_by_id,find_employee, deactivate_employee, updateEmployeeWithRelations,find_employee_by_project
+    employee_project,create_employee, create_cnh, find_employee_by_id,find_employee, deactivate_employee, updateEmployeeWithRelations,find_employee_by_project
 };
 
 export default employee_repository;

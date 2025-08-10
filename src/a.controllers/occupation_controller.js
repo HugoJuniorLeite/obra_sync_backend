@@ -2,6 +2,8 @@ import occupation_service from "../b.services/occupation_service.js";
 
 async function create_occupation_controller(req, res) {
     const data = req.body;
+    console.log(data);
+    
     try {
        if (!data || data === undefined || data === null) {
         return res.status(error.status || 400).json({message:"Campos inválidos"});

@@ -1,12 +1,20 @@
 import prisma from "../database/prismaClient.js";
 
 async function create_occupation(data) {
+let total_salary = parseFloat(data.salary);
+
+if (data.dangerousness) {
+  total_salary *= 1.30; // aumenta 30%
+}
+  
     try {
      return prisma.occupation.create({
         data:{
             name: data.name,
             description_of_occupation : data.description_of_occupation,
-            dangerousness : data.dangerousness
+            salary: data.salary,
+            dangerousness : data.dangerousness,
+            total_salary: total_salary
         }
      })
     } catch (error) {
@@ -54,7 +62,7 @@ async function update_occupation_id(occupation_id, data) {
   if (data.name !== undefined) update_data.name = data.name;
   if (data.description_of_occupation !== undefined) update_data.description_of_occupation = data.description_of_occupation;
   if (data.dangerousness !== undefined) update_data.dangerousness = data.dangerousness;
- 
+  if (data.salary !== undefined) update_data.salary = data.salary;
   if (Object.keys(update_data).length === 0) {
     throw new Error('Nenhum campo para atualizar foi fornecido.');
   }
