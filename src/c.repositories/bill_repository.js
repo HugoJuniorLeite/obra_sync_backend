@@ -113,7 +113,12 @@ async function bill_by_status(status) {
         extension_address: true,
         project: true,
         service: true,
-        technical: true
+        technical: {
+          include: {
+            employee: true
+          }
+          }
+
       }
     });
   } catch (error) {
