@@ -47,24 +47,15 @@ async function dispatch_bill_service(data, bill_id) {
     }
 }
 
-async function get_all_bills_service() {
-    try {
-        const all_bills = await bill_repository.get_all_bills();
+async function get_bill_filtered_service(status, project_id, technical_id) {
 
-    } catch (error) {
-         throw new Error(error.message); 
-    }
-}
-
-async function get_bill_by_status(status, project_id) {
-
-    const bills_by_status = await bill_repository.bill_by_status(status, project_id)
+    const bills_by_status = await bill_repository.bill_filtered(status, project_id, technical_id)
 
     return bills_by_status;
 
 }
 const bill_service ={
-    create_bill_service, dispatch_bill_service, get_bill_by_status, 
+    create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
 }
 
 export default bill_service;
