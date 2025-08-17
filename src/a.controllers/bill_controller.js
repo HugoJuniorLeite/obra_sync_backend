@@ -2,6 +2,8 @@ import bill_service from "../b.services/bill_service.js";
 
 async function create_bill_controller(req,res) {
     const data = req.body;
+    console.log(data, "controller");
+    
     if (!data || data === undefined) {
         throw new Error("Obrigatório informar dados válidos");
             }

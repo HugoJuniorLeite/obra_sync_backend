@@ -12,7 +12,8 @@ async function create_bill_service(data) {
     const extension_address = data.extension_address.create;
     const consultant = data.consultant.create;
     
-try {
+    try {
+    console.log(customer_address, extension_address, "services");
     const create_customer = await bill_repository.create_customer(customer_data);
     const create_customer_address = await bill_repository.create_customer_address(customer_address, create_customer.id);
     const create_extension_address = await bill_repository.create_extension_address(extension_address, create_customer.id);

@@ -25,6 +25,7 @@ async function create_customer_address(customer_address, customer_id) {
     data: {
       zip_code: customer_address.zip_code,
       street: customer_address.street,
+      number: Number(customer_address.number),
       neighborhood: customer_address.neighborhood,
       city: customer_address.city,
       state: customer_address.state,
@@ -40,6 +41,7 @@ async function create_extension_address(data_extension_address, customer_id) {
     data: {
       zip_code: data_extension_address.zip_code,
       street: data_extension_address.street,
+      number: Number(data_extension_address.number),
       neighborhood: data_extension_address.neighborhood,
       city: data_extension_address.city,
       state: data_extension_address.state,
