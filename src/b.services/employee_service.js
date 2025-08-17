@@ -14,6 +14,7 @@ throw new Error ("Usuário já cadastrado!")
       const saltRounds = 10; 
       const hash = await bcrypt.hash(pass, saltRounds);
   data.registration_token = hash;
+  console.log(data.registration_token, "token");
   
   if (data.cnhs !== undefined ) {
     

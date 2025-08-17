@@ -2,7 +2,7 @@ import prisma from "../database/prismaClient.js";
 
 
 async function create_employee(data) {
-    console.log(data.address, "repository");
+    console.log(data.registration_token, "repository");
     
   return prisma.employee.create({
     data: {
@@ -13,7 +13,7 @@ async function create_employee(data) {
       drivers_license: data.drivers_license,
       occupation_id: data.occupation_id,
       admission_date: data.admission_date,
-      password_hash: data.password_hash,
+      password_hash: data.registration_token,
       
       phones: {
         create :{

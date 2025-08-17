@@ -47,12 +47,19 @@ async function dispatch_bill_service(data, bill_id) {
     }
 }
 
-async function get_bill_by_status(status) {
-   console.log(status);
-   
-    const bills_by_status = await bill_repository.bill_by_status(status)
-   console.log(bills_by_status);
-   
+async function get_all_bills_service() {
+    try {
+        const all_bills = await bill_repository.get_all_bills();
+
+    } catch (error) {
+         throw new Error(error.message); 
+    }
+}
+
+async function get_bill_by_status(status, project_id) {
+
+    const bills_by_status = await bill_repository.bill_by_status(status, project_id)
+
     return bills_by_status;
 
 }

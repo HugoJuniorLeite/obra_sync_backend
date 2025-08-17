@@ -238,6 +238,7 @@ model employee {
   project_team    project_team[]
   technical       technical[]
   active          Boolean        @default(true)
+  first_access    Boolean        @default(false)
 
   @@map("employee")
 }

@@ -25,13 +25,11 @@ async function dispatch_bill_controller(req, res) {
 }
 
 async function bill_by_status(req, res) {
-    const {status} = req.query;
-console.log(status);
+    const {status, project_id} = req.query;
+
 
 try {
-  const bill_by_status = await bill_service.get_bill_by_status(status);
-  console.log(bill_by_status, "controller");
-  
+  const bill_by_status = await bill_service.get_bill_by_status(status, project_id);
   res.status(200).send(bill_by_status) 
 } catch (error) {
  return res.status(error.status || 400).json({message: error.message})   

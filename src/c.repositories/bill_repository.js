@@ -98,13 +98,21 @@ async function dispatch_bill(data, bill_id) {
   }
 }
 
-async function bill_by_status(status) {
-  console.log(status);
+async function get_all_bills() {
+  try {
+    return prisma.bill.findMany({});
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function bill_by_status(status, project_id) {
   
   try {
     return await prisma.bill.findMany({
       where: {
-        status: String(status)
+        ...(status && { status: String(status) }),
+        ...(project_id && { project_id: Number(project_id) }) // cuidado: project_id geralmente é número
       },
       include: {
         consultant: true,
@@ -119,6 +127,9 @@ async function bill_by_status(status) {
           }
           }
 
+      },
+      orderBy: {
+        created_at: "asc"
       }
     });
   } catch (error) {
@@ -138,7 +149,7 @@ async function bill_by_id(bill_id) {
   }
 }
 const bill_repository = {
-   bill_by_status, bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
+   bill_by_status, get_all_bills ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
 }
 
 export default bill_repository;
