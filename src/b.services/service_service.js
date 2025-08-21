@@ -4,15 +4,14 @@ import service_repository from "../c.repositories/service_repository.js";
 async function create_service_service(data) {
     try {console.log(data, "service");
     
-        if (!data || data === null || data === undefined) {
+        if (!data) {
             throw new Error("Dados obrigatórios");
-            
-        }
+          }
         const service_exists = await service_repository.get_service_by_name(data.name, data.project_id)
     const project_exists = await project_repository.get_project_by_id(data.project_id);
       console.log(project_exists, "projectExists");
        
-    if(!project_exists || project_exists === null || project_exists === undefined){
+    if(!project_exists){
         throw new Error("Projeto não existe");
     }
     if (service_exists) {
@@ -71,7 +70,7 @@ if (selected_project === null || selected_project === undefined) {
 
 async function update_service(service_id, data) {
     try {
-        if(!service_id || !data || service_id === undefined || data === undefined){
+        if(!service_id || !data){
             throw new Error("Dados incompletos");
         }
         const service_exists = await service_repository.get_service_by_id(service_id);

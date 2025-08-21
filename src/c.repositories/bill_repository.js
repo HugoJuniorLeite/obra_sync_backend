@@ -80,11 +80,11 @@ async function dispatch_bill(data, bill_id) {
   try {
     const updateData = {};
 
-    if (data.technical_id !== undefined && data.technical_id !== null) {
+    if (data.technical_id) {
       updateData.technical_id = Number(data.technical_id);
     }
 
-    if (data.scheduled_at !== undefined && data.scheduled_at !== null) {
+    if (data.scheduled_at) {
       updateData.scheduled_at = new Date(data.scheduled_at);
     }
 

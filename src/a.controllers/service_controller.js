@@ -5,11 +5,11 @@ async function create_service_controller(req, res) {
 
     
     try {
-        if(!data || data === undefined){
-            res.status(400).send("É necessário enviar todos os campos")
+        if(!data){
+           return res.status(400).send("É necessário enviar todos os campos")
         }
-        await service_service.create_service_service(data);
-        res.status(201).send("Serviço cadastrado com sucesso");
+       const created_service = await service_service.create_service_service(data);
+        res.status(201).json({message: "Serviço cadastrado com sucesso!",created_service});
     } catch (error) {
        return res.status(error.status || 400).json({message: error.message});       
     }

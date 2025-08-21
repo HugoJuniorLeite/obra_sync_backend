@@ -39,6 +39,15 @@ export const service_schema = Joi.object({
       'number.positive': 'O id do projecto deve ser maior que zero.',
       'any.required': 'O id do projeto é obrigatório.'
     }),
+
+  occupation_ids: Joi.array()
+    .items(Joi.number().positive())
+    .optional()
+    .messages({
+      'array.base': 'occupation_ids deve ser uma lista de números.',
+      'number.base': 'Cada occupation_id deve ser numérico.',
+      'number.positive': 'Cada occupation_id deve ser maior que zero.'
+    })
 });
 
 export const status_params = Joi.object({

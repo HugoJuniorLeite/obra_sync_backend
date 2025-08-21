@@ -1,10 +1,9 @@
 import bill_repository from "../c.repositories/bill_repository.js";
 import service_repository from "../c.repositories/service_repository.js";
-import technical_repository from "../c.repositories/technical_repository.js";
 
 async function create_bill_service(data) {
 
-    if (!data || data === undefined || data === null) {
+    if (!data) {
         throw new Error("Dados nulos no service");
             }
     const customer_data = data.customer.create;

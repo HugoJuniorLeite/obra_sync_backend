@@ -4,7 +4,7 @@ async function create_occupation(data) {
 let total_salary = parseFloat(data.salary);
 
 if (data.dangerousness) {
-  total_salary *= 1.30; // aumenta 30%
+  total_salary *= 1.30;
 }
   
     try {
@@ -14,8 +14,9 @@ if (data.dangerousness) {
             description_of_occupation : data.description_of_occupation,
             salary: data.salary,
             dangerousness : data.dangerousness,
-            total_salary: total_salary
-        }
+            active: true,
+            total_salary: total_salary,
+          }
      })
     } catch (error) {
         throw new Error(error.message);
