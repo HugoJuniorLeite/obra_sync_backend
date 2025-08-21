@@ -88,9 +88,8 @@ if (occupation_exists) {
         }
     }
 
-
 const occupation_service = {
-    create_occupation_service, get_occupation_by_id_service,get_all_occupations_service, update_occupation,deactivate_occupation_service
+ create_occupation_service, get_occupation_by_id_service,get_all_occupations_service, update_occupation,deactivate_occupation_service
 }
 
 export default occupation_service;

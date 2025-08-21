@@ -1,5 +1,6 @@
 import project_repository from "../c.repositories/project_repository.js";
 import service_repository from "../c.repositories/service_repository.js";
+import employee_repository from "../c.repositories/employee_repository.js"
 
 async function create_service_service(data) {
     try {console.log(data, "service");
@@ -103,8 +104,32 @@ async function deactivate_service(service_id) {
     }
 }
 
+async function get_service_by_occupation_service(employee_id) {
+      if(!employee_id){
+        throw new Error("Dados inválidos!");
+    }
+    try {
+        const employee_exists = await employee_repository.find_employee_by_id(employee_id);
+        if (!employee_exists) {
+            throw new Error("Funcionário não encontrado");
+            }
+            console.log(employee_exists, "service 1");
+            
+        const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
+        
+        const array = [];
+     const service_ids = services_by_occupation.map(service => service.service_id);
+
+     const filtered_services = await service_repository.get_service_by_ids(service_ids);
+
+        return filtered_services
+    } catch (error) {
+        
+    }
+}
+
 const service_service = {
-    create_service_service, get_service_by_id, all_service_by_project, update_service, deactivate_service
+   get_service_by_occupation_service ,create_service_service, get_service_by_id, all_service_by_project, update_service, deactivate_service
 }
 
 export default service_service;

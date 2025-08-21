@@ -117,11 +117,11 @@ async function bill_filtered(status, project_id, technical_id) {
         extension_address: true,
         project: true,
         service: true,
-        technical: {
-          include: {
-            employee: true
-          }
-          }
+        // technical: {
+        //   include: {
+        //     employee: true
+        //   }
+        //   }
 
       },
       orderBy: {
