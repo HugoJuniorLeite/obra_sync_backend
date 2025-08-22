@@ -54,8 +54,31 @@ async function get_bill_filtered_service(status, project_id, technical_id) {
     return bills_by_status;
 
 }
+
+async function get_all_technicals() {
+  try {
+    const all_occupation_ids = await bill_repository.get_occupation_ids();
+
+    const occupation_ids = [...new Set(
+      all_occupation_ids.map(occupation => occupation.occupation_id)
+    )];
+
+    console.log(occupation_ids, "ids");
+
+    if (occupation_ids.length === 0) {
+      return []; // evita erro no Prisma
+    }
+
+    const all_technicals = await bill_repository.get_technical_by_occupation_id(occupation_ids);
+    return all_technicals;
+
+  } catch (error) {
+    throw new Error(error.message); 
+  }
+}
+
 const bill_service ={
-    create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
+   get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
 }
 
 export default bill_service;

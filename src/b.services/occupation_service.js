@@ -74,10 +74,10 @@ if (occupation_exists) {
         try {
 
         const selected_occuṕation = await occupation_repository.get_occupation_by_id(occupation_id);
-       console.log(selected_occuṕation, "selected_project");
+      
        
         if (selected_occuṕation === null || !selected_occuṕation) {
-        throw new Error("Cargo encontrado");
+        throw new Error("Cargo não encontrado");
       }
 
             await occupation_repository.deactivate_occupation(occupation_id);

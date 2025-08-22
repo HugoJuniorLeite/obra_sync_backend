@@ -133,6 +133,23 @@ async function bill_filtered(status, project_id, technical_id) {
   }
 }
 
+async function get_technical_by_occupation_id(occupation_id) {
+  console.log(occupation_id, "occupation_id");
+  
+  try {
+    return prisma.employee.findMany({
+      where: {
+      occupation_id: { in: occupation_id }
+    },
+    include: {
+      occupation: true,
+    }
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 async function bill_by_id(bill_id) {
   try {
     return await prisma.bill.findFirst({
@@ -144,8 +161,18 @@ async function bill_by_id(bill_id) {
     throw new Error(error.message);
   }
 }
+async function get_occupation_ids() {
+  try {
+    return await prisma.occupation_service.findMany({
+
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 const bill_repository = {
-   bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
+  get_technical_by_occupation_id ,get_occupation_ids ,bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
 }
 
 export default bill_repository;

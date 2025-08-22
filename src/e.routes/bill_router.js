@@ -6,4 +6,6 @@ const bill_router = Router();
 bill_router.post("/add-bill", bill_controller.create_bill_controller);
 bill_router.put("/dispatch-bill/:bill_id", bill_controller.dispatch_bill_controller);
 bill_router.get("/get-bills", bill_controller.get_bill_filtered_controller);
+bill_router.get("/get-technicals", bill_controller.get_all_technicals);
+
 export default bill_router;

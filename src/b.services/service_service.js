@@ -113,8 +113,7 @@ async function get_service_by_occupation_service(employee_id) {
         if (!employee_exists) {
             throw new Error("Funcionário não encontrado");
             }
-            console.log(employee_exists, "service 1");
-            
+                     
         const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
         
         const array = [];

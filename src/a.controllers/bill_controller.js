@@ -26,6 +26,15 @@ async function dispatch_bill_controller(req, res) {
     }
 }
 
+async function get_all_technicals(req,res) {
+    try {
+        const all_technicals = await bill_service.get_all_technicals();
+    res.status(200).send(all_technicals);
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message}) 
+    }
+}
+
 async function get_bill_filtered_controller(req, res) {
     const {status, project_id, technical_id} = req.query;
 
@@ -38,7 +47,7 @@ try {
 }
 }
 const bill_controller = {
-    create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
+   get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
 }
 
 export default bill_controller;
