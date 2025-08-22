@@ -87,8 +87,9 @@ async function deactivate_occupation(occupation_id) {
     })
 }
 
+
 const occupation_repository = {
-    create_occupation, get_all_occupations, deactivate_occupation,get_occupation_by_id, verify_occupation_exists, update_occupation_id
+  create_occupation, get_all_occupations, deactivate_occupation,get_occupation_by_id, verify_occupation_exists, update_occupation_id
 }
 
 export default occupation_repository;

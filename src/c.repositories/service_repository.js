@@ -65,7 +65,6 @@ async function get_service_by_id(id) {
 }
 
 export async function update_service_id(service_id, data) {
-  // Atualiza campos simples
   const update_data = {};
   if (data.name !== undefined) update_data.name = data.name;
   if (data.description !== undefined) update_data.description = data.description;
@@ -123,9 +122,28 @@ async function deactivate_service(service_id) {
     })
 }
 
+async function get_service_by_occupation(occupation_id) {
+  try {
+    return prisma.occupation_service.findMany({
+      where: {
+        occupation_id: Number(occupation_id)
+      }
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function get_service_by_ids(ids) {
+  return await prisma.service.findMany({
+    where: {
+      id: { in: ids }
+    }
+  });
+}
 
 const service_repository = {
-    create_service, get_all_services, get_service_by_id, update_service_id, deactivate_service, get_service_by_name
+   get_service_by_ids ,get_service_by_occupation, create_service, get_all_services, get_service_by_id, update_service_id, deactivate_service, get_service_by_name
 }
 
 export default service_repository;

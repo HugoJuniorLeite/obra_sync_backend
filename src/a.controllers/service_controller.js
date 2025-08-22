@@ -75,9 +75,22 @@ async function deactivate_service_controller(req, res) {
     }
 }
 
+async function get_service_by_occupation_controller(req, res) {
+    const {employee_id} = req.params;
+console.log(employee_id);
+
+    try {
+        const services_by_occupation = await service_service.get_service_by_occupation_service(employee_id);
+
+    return res.status(200).send(services_by_occupation);
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message});  
+    }
+    
+}
 
 const service_controller = {
-    create_service_controller, get_all_services_by_project, get_service_by_id, update_service, deactivate_service_controller
+   get_service_by_occupation_controller ,create_service_controller, get_all_services_by_project, get_service_by_id, update_service, deactivate_service_controller
 }
 
 export default service_controller;

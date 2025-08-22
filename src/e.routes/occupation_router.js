@@ -11,4 +11,5 @@ occupation_router.get("/occupation-by-id/:occupation_id", occupation_controller.
 occupation_router.put("/update-occupation/:occupation_id", occupation_controller.update_occupation_by_id);
 occupation_router.put("/delete-occupation/:occupation_id", occupation_controller.deactivate_occupation_controller);
 
+
 export default occupation_router;
