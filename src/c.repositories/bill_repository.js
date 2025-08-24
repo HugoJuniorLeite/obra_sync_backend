@@ -108,7 +108,7 @@ async function bill_filtered(status, project_id, technical_id) {
       where: {
         ...(status && { status: String(status) }),
         ...(project_id && { project_id: Number(project_id) }),
-        ...(technical_id && { technical: { id: Number(technical_id)} 
+        ...(technical_id && { technical_id:  Number(technical_id) 
 })      
       },
       include: {

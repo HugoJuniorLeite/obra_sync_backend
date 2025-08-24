@@ -56,6 +56,8 @@ try {
 
 async function get_bill_by_technical(req, res) {
   const {employee_id} = req.params;
+  console.log(employee_id,"controller");
+  
 if (!employee_id) {
     return res.status(400).send("É necessário inserir dados válidos!")
 }

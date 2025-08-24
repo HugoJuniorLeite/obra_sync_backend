@@ -84,6 +84,8 @@ async function get_all_technicals(project_id) {
 }
 
 async function bill_by_technical(employee_id) {
+    console.log(employee_id, "service");
+    
     if (!employee_id) {
         throw new Error("Informe um técnico válido");
             }
