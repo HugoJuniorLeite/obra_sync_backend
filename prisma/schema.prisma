@@ -73,6 +73,7 @@ model bill {
   extension_address    extension_address @relation(fields: [extension_address_id], references: [id])
   project              project           @relation(fields: [project_id], references: [id])
   service              service           @relation(fields: [service_id], references: [id])
+  technical            employee?         @relation(fields: [technical_id], references: [id])
 
   @@map("bill")
 }
@@ -216,6 +217,7 @@ model employee {
   occupation      occupation     @relation(fields: [occupation_id], references: [id])
   phones          phone[]
   project_team    project_team[]
+  bill            bill[]
 
   @@map("employee")
 }

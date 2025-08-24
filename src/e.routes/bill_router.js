@@ -9,6 +9,6 @@ bill_router.get("/get-bills", bill_controller.get_bill_filtered_controller);
 bill_router.get("/get-technicals/:project_id", bill_controller.get_all_technicals);
 bill_router.get("/bill-by-technical/:employee_id", bill_controller.get_bill_by_technical)
 bill_router.put("/change-status-bill/:bill_id", bill_controller.change_status_bill_controller);
-
+bill_router.get("/bill-by-id/:bill_id", bill_controller.get_bill_by_id_controller);
 
 export default bill_router;

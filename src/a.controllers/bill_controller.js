@@ -87,8 +87,22 @@ async function change_status_bill_controller(req, res) {
     }
 }
 
+async function get_bill_by_id_controller(req, res) {
+    const {bill_id} = req.params;
+    if (!bill_id) {
+        throw new Error("Dados Inválidos");
+    }
+    try {
+        const selected_bill = await bill_service.get_bill_by_id(bill_id);
+        res.status(200).send(selected_bill)
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message})   
+    }
+
+}
+
 const bill_controller = {
-  change_status_bill_controller ,get_bill_by_technical ,get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
+ get_bill_by_id_controller ,change_status_bill_controller ,get_bill_by_technical ,get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
 }
 
 export default bill_controller;

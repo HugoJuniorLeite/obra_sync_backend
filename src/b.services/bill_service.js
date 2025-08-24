@@ -130,8 +130,20 @@ async function change_status_bill_service(data, bill_id) {
     }
 }
 
+async function get_bill_by_id(bill_id) {
+    try {
+        const selected_bill = await bill_repository.bill_by_id(bill_id);
+        if (!selected_bill) {
+            throw new Error("Nota não encontrada");
+            }
+    return selected_bill;
+    } catch (error) {
+        throw new Error(error.message);
+        
+    }
+}
 const bill_service ={
- change_status_bill_service ,bill_by_technical ,get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
+get_bill_by_id ,change_status_bill_service ,bill_by_technical ,get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
 }
 
 export default bill_service;

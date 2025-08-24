@@ -177,8 +177,15 @@ async function bill_by_id(bill_id) {
     return await prisma.bill.findFirst({
       where: {
         id: Number(bill_id)
+      },
+      include: {
+        consultant: true,
+        customer: true,
+        customer_address: true,
+        extension_address: true,
+        technical: true
       }
-    })
+    });
   } catch (error) {
     throw new Error(error.message);
   }
@@ -223,7 +230,7 @@ async function get_bills_by_technical(project_id, service_ids) {
     where: {
       ...(project_id ? { project_id: Number(project_id) } : {}),
       ...(service_ids?.length ? { service_id: { in: service_ids.map(Number) } } : {}),
-      status: "aberta",
+      status: { in: ["aberta", "devolvida"] },
     },
     include: {
       project: true,
