@@ -120,10 +120,7 @@ async function change_status_bill_service(data, bill_id) {
         }
         console.log(bill_exists, "bill_exists");
         
-        if (bill_exists.status !== "despachada") {
-            throw new Error("Só é possível aceitar notas que estão com o status despachada");
-            
-        }
+      
         try {
         await bill_repository.change_status_bill(data, bill_id);
         return

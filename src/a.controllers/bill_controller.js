@@ -74,6 +74,8 @@ return res.status(200).send(bill_by_technical);
 async function change_status_bill_controller(req, res) {
     const data = req.body;
     const {bill_id} = req.params;
+    console.log(data, bill_id, "controller");
+    
        if (!data || ! bill_id) {
         throw new Error("Dados Inválidos");
         }
