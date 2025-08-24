@@ -16,3 +16,20 @@ async function create_project_team(project_id, employee_id) {
         
     }
 }
+async function get_project_by_employee(employee_id) {
+    console.log(employee_id, "project team");
+    
+    try {
+        return prisma.findFirst({
+            where: {employee_id: Number(employee_id)}
+        })
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
+const project_team_repository = {
+    get_project_by_employee, create_project_team
+}
+
+export default project_team_repository;

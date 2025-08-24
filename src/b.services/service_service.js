@@ -1,6 +1,7 @@
 import project_repository from "../c.repositories/project_repository.js";
 import service_repository from "../c.repositories/service_repository.js";
 import employee_repository from "../c.repositories/employee_repository.js"
+import project_team_repository from "../c.repositories/project_team_repository.js";
 
 async function create_service_service(data) {
     try {console.log(data, "service");
@@ -105,26 +106,38 @@ async function deactivate_service(service_id) {
 }
 
 async function get_service_by_occupation_service(employee_id) {
-      if(!employee_id){
-        throw new Error("Dados inválidos!");
-    }
-    try {
-        const employee_exists = await employee_repository.find_employee_by_id(employee_id);
-        if (!employee_exists) {
-            throw new Error("Funcionário não encontrado");
-            }
-                     
-        const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
-        
-        const array = [];
-     const service_ids = services_by_occupation.map(service => service.service_id);
+  if (!employee_id) {
+    throw new Error("Dados inválidos!");
+  }
 
-     const filtered_services = await service_repository.get_service_by_ids(service_ids);
-
-        return filtered_services
-    } catch (error) {
-        
+  try {
+    
+    const employee_exists = await employee_repository.find_employee_by_id(employee_id);
+    if (!employee_exists) {
+      throw new Error("Funcionário não encontrado");
     }
+const project = await project_team_repository.get_project_by_employee(employee_exists.id)
+   console.log(project, "project");
+   
+    const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
+
+    if (!services_by_occupation || services_by_occupation.length === 0) {
+      return []; 
+    }
+
+    const service_ids = services_by_occupation.map(service => service.service_id);
+
+  
+    const unique_ids = [...new Set(service_ids)];
+
+  
+    const filtered_services = await service_repository.get_service_by_ids(project.project_id, unique_ids);
+
+    return filtered_services;
+  } catch (error) {
+    console.error("Erro em get_service_by_occupation_service:", error.message);
+    throw error; // propaga o erro para quem chamar a função
+  }
 }
 
 const service_service = {
