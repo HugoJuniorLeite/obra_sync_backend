@@ -41,7 +41,7 @@ async function dispatch_bill_service(data, bill_id) {
  console.log(bill_exists);
  console.log(data);
  
- if (bill_exists.status !== "aberta") {
+ if (bill_exists.status !== "aberta" || bill_exists.status !== "devolvida" || bill_exists.status !== "reprogramada") {
     throw new Error("Só é possível despachar notas com status aberta");
     
  }
@@ -122,8 +122,7 @@ async function change_status_bill_service(data, bill_id) {
         
         if (bill_exists.status !== "despachada") {
             throw new Error("Só é possível aceitar notas que estão com o status despachada");
-            
-        }
+                    }
         try {
         await bill_repository.change_status_bill(data, bill_id);
         return
