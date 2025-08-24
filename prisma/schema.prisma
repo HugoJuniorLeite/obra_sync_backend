@@ -37,8 +37,8 @@ model occupation {
   active                    Boolean
   salary                    Float
   total_salary              Float
-  services                  occupation_service[]
   employees                 employee[]
+  services                  occupation_service[]
 }
 
 model service {
@@ -48,9 +48,9 @@ model service {
   price       Decimal              @db.Decimal(16, 2)
   project_id  Int
   active      Boolean              @default(true)
-  project     project              @relation(fields: [project_id], references: [id])
-  occupations occupation_service[]
   bills       bill[]
+  occupations occupation_service[]
+  project     project              @relation(fields: [project_id], references: [id])
 }
 
 model bill {
@@ -72,7 +72,7 @@ model bill {
   customer             customer          @relation(fields: [customer_id], references: [id])
   extension_address    extension_address @relation(fields: [extension_address_id], references: [id])
   project              project           @relation(fields: [project_id], references: [id])
-  service              service?          @relation(fields: [service_id], references: [id])
+  service              service           @relation(fields: [service_id], references: [id])
 
   @@map("bill")
 }
@@ -89,29 +89,22 @@ model project {
   created_at           DateTime       @default(now())
   updated_at           DateTime       @updatedAt
   firm_id              Int
-  firm                 firm           @relation(fields: [firm_id], references: [id])
   responsible_contract String
   active               Boolean        @default(true)
-  services             service[]
-  project_team         project_team[]
   bill                 bill[]
+  firm                 firm           @relation(fields: [firm_id], references: [id])
+  project_team         project_team[]
+  services             service[]
 
   @@index([start_date, estimated_end_date])
-}
-
-enum status_project {
-  planned
-  active
-  completed
-  canceled
 }
 
 model phone {
   id          Int      @id @default(autoincrement())
   phoneNumber String
   employee_id Int
-  employee    employee @relation(fields: [employee_id], references: [id])
   active      Boolean  @default(true)
+  employee    employee @relation(fields: [employee_id], references: [id])
 
   @@map("phone")
 }
@@ -123,8 +116,8 @@ model cnh {
   validity              DateTime @db.Date
   first_drivers_license DateTime @db.Date
   category_cnh          String?
-  employee              employee @relation(fields: [employee_id], references: [id])
   active                Boolean  @default(true)
+  employee              employee @relation(fields: [employee_id], references: [id])
 
   @@map("cnh")
 }
@@ -134,8 +127,8 @@ model project_team {
   project_id  Int
   employee_id Int
   active      Boolean  @default(true)
-  project     project  @relation(fields: [project_id], references: [id])
   employee    employee @relation(fields: [employee_id], references: [id])
+  project     project  @relation(fields: [project_id], references: [id])
 
   @@map("project_team")
 }
@@ -150,8 +143,8 @@ model address {
   country         String
   employee_id     Int      @unique
   neighborhood    String?
-  employee        employee @relation(fields: [employee_id], references: [id])
   active          Boolean  @default(true)
+  employee        employee @relation(fields: [employee_id], references: [id])
 
   @@map("address")
 }
@@ -171,11 +164,11 @@ model customer_address {
   id           Int      @id @default(autoincrement())
   zip_code     String
   street       String
-  number       Int
   neighborhood String
   city         String
   state        String
   customer_id  Int      @map("customer_id")
+  number       Int
   bills        bill[]
   customer     customer @relation(fields: [customer_id], references: [id])
 
@@ -186,11 +179,11 @@ model extension_address {
   id           Int      @id @default(autoincrement())
   zip_code     String
   street       String
-  number       Int
   neighborhood String
   city         String
   state        String
   customer_id  Int      @map("customer_id")
+  number       Int
   bills        bill[]
   customer     customer @relation(fields: [customer_id], references: [id])
 
@@ -216,13 +209,13 @@ model employee {
   occupation_id   Int
   admission_date  DateTime       @db.Date
   password_hash   String?
+  active          Boolean        @default(true)
+  first_access    Boolean        @default(false)
   address         address?
   cnhs            cnh[]
   occupation      occupation     @relation(fields: [occupation_id], references: [id])
   phones          phone[]
   project_team    project_team[]
-  active          Boolean        @default(true)
-  first_access    Boolean        @default(false)
 
   @@map("employee")
 }
@@ -231,9 +224,16 @@ model occupation_service {
   occupation_id Int
   service_id    Int
   occupation    occupation @relation(fields: [occupation_id], references: [id])
-  service       service?   @relation(fields: [service_id], references: [id])
+  service       service    @relation(fields: [service_id], references: [id])
 
   @@id([occupation_id, service_id])
+}
+
+enum status_project {
+  planned
+  active
+  completed
+  canceled
 }
 
 enum bill_status {
