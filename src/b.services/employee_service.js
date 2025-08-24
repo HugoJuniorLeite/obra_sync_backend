@@ -16,7 +16,7 @@ throw new Error ("Usuário já cadastrado!")
   data.registration_token = hash;
   console.log(data.registration_token, "token");
   
-  if (data.cnhs !== undefined ) {
+  if (data.cnhs !== undefined) {
     
 const new_employee = await employee_repository.create_employee(data)
 

@@ -117,12 +117,6 @@ async function bill_filtered(status, project_id, technical_id) {
         extension_address: true,
         project: true,
         service: true,
-        // technical: {
-        //   include: {
-        //     employee: true
-        //   }
-        //   }
-
       },
       orderBy: {
         created_at: "asc"
@@ -132,6 +126,30 @@ async function bill_filtered(status, project_id, technical_id) {
     throw new Error(error.message);
   }
 }
+
+async function get_technical_by_occupation_id(project_id, occupation_ids) {
+  console.log(occupation_ids, project_id, "occupation_ids");
+
+  try {
+    return await prisma.employee.findMany({
+      where: {
+        occupation_id: { in: occupation_ids },
+        project_team: {
+          some: {
+            project_id: Number(project_id),
+          }
+        }
+      },
+      include: {
+        occupation: true,
+        project_team: true 
+      }
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 
 async function bill_by_id(bill_id) {
   try {
@@ -144,8 +162,53 @@ async function bill_by_id(bill_id) {
     throw new Error(error.message);
   }
 }
+
+async function get_occupation_employee(employee_id) {
+  try {
+    return prisma.employee.findFirst({
+      where: { employee_id: Number(employee_id)}
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function get_service_by_occupation(occupation_id) {
+  try {
+    return prisma.occupation_service.findMany({
+      where: {
+        occupation_id: Number(occupation_id)
+      }
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function get_occupation_ids() {
+  try {
+    return await prisma.occupation_service.findMany({
+
+    })
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function get_bills_by_technical(project_id, service_ids) {
+  console.log(project_id, service_ids);
+  
+  return await prisma.bill.findMany({
+    where: {
+      ...(project_id && { project_id: Number(project_id) }),
+      ...(service_ids?.length && { service_id: { in: service_ids.map(Number) } }),
+    status: "aberta"
+    }
+  });
+}
+
 const bill_repository = {
-   bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
+get_bills_by_technical ,get_occupation_employee ,get_service_by_occupation ,get_technical_by_occupation_id ,get_occupation_ids ,bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
 }
 
 export default bill_repository;

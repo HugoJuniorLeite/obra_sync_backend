@@ -34,11 +34,13 @@ async function create_employee(data) {
         }
      },
      project_team: {
-      create: {
-        project_id: Number(data.project_team.create.project_id),
-        active: true
-      }
-     }
+  create: [
+    {
+      project_id: Number(data.project_team.create.project_id),
+      active: true
+    }
+  ]
+}
     },
   });
 }

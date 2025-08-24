@@ -26,6 +26,18 @@ async function dispatch_bill_controller(req, res) {
     }
 }
 
+async function get_all_technicals(req,res) {
+    const {project_id} = req.params;
+console.log(project_id);
+
+    try {
+        const all_technicals = await bill_service.get_all_technicals(project_id);
+    res.status(200).send(all_technicals);
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message}) 
+    }
+}
+
 async function get_bill_filtered_controller(req, res) {
     const {status, project_id, technical_id} = req.query;
 
@@ -37,8 +49,24 @@ try {
  return res.status(error.status || 400).json({message: error.message})   
 }
 }
+
+async function get_bill_by_technical(req, res) {
+  const {employee_id} = req.params;
+if (!employee_id) {
+    return res.status(400).send("É necessário inserir dados válidos!")
+}
+
+  try {
+    const bill_by_technical = await bill_service.bill_by_technical(employee_id)
+return res.status(200).send(bill_by_technical);  
+} catch (error) {
+    return res.status(error.status || 400).json({message: error.message})   
+  }
+    
+}
+
 const bill_controller = {
-    create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
+   get_bill_by_technical ,get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
 }
 
 export default bill_controller;

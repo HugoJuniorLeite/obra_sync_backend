@@ -1,5 +1,6 @@
 import bill_repository from "../c.repositories/bill_repository.js";
 import service_repository from "../c.repositories/service_repository.js";
+import employee_repository from "../c.repositories/employee_repository.js";
 
 async function create_bill_service(data) {
 
@@ -54,8 +55,57 @@ async function get_bill_filtered_service(status, project_id, technical_id) {
     return bills_by_status;
 
 }
+
+async function get_all_technicals(project_id) {
+    console.log(project_id, "service");
+    
+  try {
+    const all_occupation_ids = await bill_repository.get_occupation_ids();
+
+    const occupation_ids = [...new Set(
+      all_occupation_ids.map(occupation => occupation.occupation_id)
+    )];
+
+    console.log(occupation_ids, "ids");
+
+    if (occupation_ids.length === 0) {
+      return []; 
+    }
+
+    const all_technicals = await bill_repository.get_technical_by_occupation_id(project_id, occupation_ids);
+    return all_technicals;
+
+  } catch (error) {
+    throw new Error(error.message); 
+  }
+}
+
+async function bill_by_technical(employee_id) {
+    if (!employee_id) {
+        throw new Error("Informe um técnico válido");
+            }
+    try {
+        const employee_exists = await employee_repository.find_employee_by_id(employee_id);
+        if (!employee_exists) {
+            throw new Error("Funcionário não encontrado");
+            }
+                console.log(employee_exists);
+                     
+        const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
+        console.log(services_by_occupation, "servicesByOccupation");
+        
+     const service_ids = services_by_occupation.map(service => service.service_id);
+
+     const filtered_bills = await bill_repository.get_bills_by_technical(projects.project_id, service_ids);
+     console.log(filtered_bills);
+return filtered_bills
+    } catch (error) {
+         throw new Error(error.message); 
+    }
+}
+
 const bill_service ={
-    create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
+  bill_by_technical ,get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
 }
 
 export default bill_service;

@@ -56,6 +56,7 @@ async function delete_employee(req, res){
         return res.status(error.status || 400).json({message: error.message})
     }
 }
+
 const employee_controller = {
     register_employee_controller, delete_employee, find_employee_by_project_controller, update_employee_controller
 }
