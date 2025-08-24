@@ -110,8 +110,31 @@ return filtered_bills
     }
 }
 
+async function change_status_bill_service(data, bill_id) {
+    if (!data || ! bill_id) {
+        throw new Error("Dados Inválidos");
+        }
+        const bill_exists = await bill_repository.bill_by_id(bill_id);
+        if (!bill_exists) {
+            throw new Error("Nota não encontrada!");            
+        }
+        console.log(bill_exists, "bill_exists");
+        
+        if (bill_exists.status !== "despachada") {
+            throw new Error("Só é possível aceitar notas que estão com o status despachada");
+            
+        }
+        try {
+        await bill_repository.change_status_bill(data, bill_id);
+        return
+        
+    } catch (error) {
+        throw new Error(error.message); 
+    }
+}
+
 const bill_service ={
-  bill_by_technical ,get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
+ change_status_bill_service ,bill_by_technical ,get_all_technicals ,create_bill_service, dispatch_bill_service, get_bill_filtered_service, 
 }
 
 export default bill_service;

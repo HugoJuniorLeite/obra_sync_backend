@@ -76,6 +76,26 @@ async function create_bill(create_customer_id, create_customer_adress_id, create
   });
 }
 
+async function change_status_bill(data, bill_id) {
+   console.log(data, bill_id, "repo");
+  try {
+    const updateData = {};
+
+    if (data.status) {
+      updateData.status = data.status
+    }
+
+    return await prisma.bill.update({
+      where: { id: Number(bill_id) },
+      data: updateData
+    });
+
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
 async function dispatch_bill(data, bill_id) {
    console.log(data, bill_id, "repo");
   try {
@@ -217,7 +237,7 @@ async function get_bills_by_technical(project_id, service_ids) {
 }
 
 const bill_repository = {
-get_bills_by_technical ,get_occupation_employee ,get_service_by_occupation ,get_technical_by_occupation_id ,get_occupation_ids ,bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
+change_status_bill ,get_bills_by_technical ,get_occupation_employee ,get_service_by_occupation ,get_technical_by_occupation_id ,get_occupation_ids ,bill_filtered ,bill_by_id, dispatch_bill, verify_customer_exists,create_customer, create_customer_address, create_extension_address, create_consultant, create_bill
 }
 
 export default bill_repository;

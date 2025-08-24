@@ -71,8 +71,22 @@ return res.status(200).send(bill_by_technical);
     
 }
 
+async function change_status_bill_controller(req, res) {
+    const data = req.body;
+    const {bill_id} = req.params;
+       if (!data || ! bill_id) {
+        throw new Error("Dados Inválidos");
+        }
+    try {
+        await bill_service.change_status_bill_service(data, bill_id)
+   res.status(200).send("Nota aceita com sucesso!");
+    } catch (error) {
+         return res.status(error.status || 400).json({message: error.message})   
+    }
+}
+
 const bill_controller = {
-   get_bill_by_technical ,get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
+  change_status_bill_controller ,get_bill_by_technical ,get_all_technicals ,create_bill_controller, dispatch_bill_controller, get_bill_filtered_controller
 }
 
 export default bill_controller;
