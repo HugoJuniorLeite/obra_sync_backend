@@ -77,6 +77,7 @@ async function create_bill(create_customer_id, create_customer_adress_id, create
 }
 
 async function dispatch_bill(data, bill_id) {
+   console.log(data, bill_id, "repo");
   try {
     const updateData = {};
 
@@ -200,10 +201,18 @@ async function get_bills_by_technical(project_id, service_ids) {
   
   return await prisma.bill.findMany({
     where: {
-      ...(project_id && { project_id: Number(project_id) }),
-      ...(service_ids?.length && { service_id: { in: service_ids.map(Number) } }),
-    status: "aberta"
-    }
+      ...(project_id ? { project_id: Number(project_id) } : {}),
+      ...(service_ids?.length ? { service_id: { in: service_ids.map(Number) } } : {}),
+      status: "aberta",
+    },
+    include: {
+      project: true,
+      service: true,
+      customer_address: true,
+    },
+    orderBy: {
+      created_at: "desc",
+    },
   });
 }
 

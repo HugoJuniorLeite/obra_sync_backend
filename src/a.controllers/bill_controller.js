@@ -18,6 +18,10 @@ async function create_bill_controller(req,res) {
 async function dispatch_bill_controller(req, res) {
     const data = req.body;
     const bill_id = req.params.bill_id;
+    console.log(data, "data");
+    console.log(bill_id, "id");
+    
+    
     try {
         await bill_service.dispatch_bill_service( data, bill_id);
         res.status(201).send("Nota despachada com sucesso!")

@@ -20,7 +20,7 @@ async function get_project_by_employee(employee_id) {
     console.log(employee_id, "project team");
     
     try {
-        return prisma.findFirst({
+        return prisma.project_team.findFirst({
             where: {employee_id: Number(employee_id)}
         })
     } catch (error) {

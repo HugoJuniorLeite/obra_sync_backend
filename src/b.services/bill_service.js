@@ -1,6 +1,7 @@
 import bill_repository from "../c.repositories/bill_repository.js";
 import service_repository from "../c.repositories/service_repository.js";
 import employee_repository from "../c.repositories/employee_repository.js";
+import project_team_repository from "../c.repositories/project_team_repository.js";
 
 async function create_bill_service(data) {
 
@@ -27,6 +28,8 @@ async function create_bill_service(data) {
 }
 
 async function dispatch_bill_service(data, bill_id) {
+    console.log(data, bill_id, "service");
+    
     if (!data || data === undefined || data === null) {
         throw new Error("Dados nulos no service");
             }
@@ -39,7 +42,7 @@ async function dispatch_bill_service(data, bill_id) {
  console.log(data);
  
  if (bill_exists.status !== "aberta") {
-    throw new Error("Não é possível despachar notas que nã estejam com status aberta");
+    throw new Error("Só é possível despachar notas com status aberta");
     
  }
         await bill_repository.dispatch_bill(data, bill_exists.id)
@@ -90,11 +93,12 @@ async function bill_by_technical(employee_id) {
             throw new Error("Funcionário não encontrado");
             }
                 console.log(employee_exists);
-                     
+        const projects = await project_team_repository.get_project_by_employee(employee_exists.id);      
         const services_by_occupation = await service_repository.get_service_by_occupation(employee_exists.occupation_id);
         console.log(services_by_occupation, "servicesByOccupation");
         
      const service_ids = services_by_occupation.map(service => service.service_id);
+console.log(projects, "projects");
 
      const filtered_bills = await bill_repository.get_bills_by_technical(projects.project_id, service_ids);
      console.log(filtered_bills);

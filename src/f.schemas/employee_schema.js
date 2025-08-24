@@ -17,12 +17,12 @@ const employee_schema = Joi.object({
 
   cnhs: Joi.object({
     create: Joi.object({
-      category_cnh: Joi.string().required(),
-      number_license: Joi.string().required(),
-      validity: Joi.string().isoDate().required(),
-      first_drivers_license: Joi.string().isoDate().required()
-    }).required()
-  }).required(),
+      category_cnh: Joi.string(),
+      number_license: Joi.string(),
+      validity: Joi.string().isoDate(),
+      first_drivers_license: Joi.string().isoDate()
+    })
+  }),
 
   address: Joi.object({
     create: Joi.object({

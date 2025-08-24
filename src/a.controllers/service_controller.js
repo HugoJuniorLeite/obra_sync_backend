@@ -2,6 +2,7 @@ import service_service from "../b.services/service_service.js";
 
 async function create_service_controller(req, res) {
     const data = req.body;
+console.log(data, "service ");
 
     
     try {
