@@ -27,7 +27,7 @@ async function dispatch_bill_controller(req, res) {
 }
 
 async function get_all_technicals(req,res) {
-    const {project_id} = req.params;
+   
 console.log(project_id);
 
     try {
