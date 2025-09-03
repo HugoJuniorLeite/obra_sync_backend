@@ -77,9 +77,15 @@ async function find_employee(cpf) {
 }
 
 async function find_employee_by_id(employee_id) {
-  return prisma.employee.findUnique({
-    where: { id: Number(employee_id) }
-  });
+  try {
+    return prisma.employee.findUnique({
+      where: { id: Number(employee_id) }
+    });
+    
+  } catch (error) {
+    throw new Error(error.message);
+    
+  }
 }
 
 async function find_employee_by_project(project_id) {

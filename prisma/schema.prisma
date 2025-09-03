@@ -248,3 +248,26 @@ enum bill_status {
   cancelada
   reprogramada
 }
+
+
+model RDO {
+  id           Int      @id @default(autoincrement())
+  posicaoRamal String?
+  tipoRamal    String?
+  ramalCortado String?
+  localCorte   String?
+  comentario   String?
+
+  uploads      Upload[]
+}
+
+model Upload {
+  id        Int      @id @default(autoincrement())
+  filename  String
+  url       String
+  createdAt DateTime @default(now())
+
+  rdoId     Int?
+  rdo       RDO?     @relation(fields: [rdoId], references: [id])
+}
+

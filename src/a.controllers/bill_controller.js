@@ -21,7 +21,10 @@ async function dispatch_bill_controller(req, res) {
     console.log(data, "data");
     console.log(bill_id, "id");
     
-    
+    if (!data || !bill_id) {
+        throw new Error("Dados inválidos");
+        
+    }
     try {
         await bill_service.dispatch_bill_service( data, bill_id);
         res.status(201).send("Nota despachada com sucesso!")

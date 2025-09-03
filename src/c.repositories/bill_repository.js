@@ -182,8 +182,7 @@ async function bill_by_id(bill_id) {
         consultant: true,
         customer: true,
         customer_address: true,
-        extension_address: true,
-        technical: true
+        extension_address: true
       }
     });
   } catch (error) {

@@ -35,13 +35,13 @@ async function dispatch_bill_service(data, bill_id) {
             }
     try {
         const bill_exists = await bill_repository.bill_by_id(bill_id);
-        if (!bill_exists || bill_exists === null || bill_exists === undefined) {
+        console.log(bill_exists);
+        console.log(data);
+        if (!bill_exists) {
             throw new Error("Nota de atendimento não encontrada!");
             }
- console.log(bill_exists);
- console.log(data);
  
- if (bill_exists.status !== "aberta" || bill_exists.status !== "devolvida" || bill_exists.status !== "reprogramada") {
+ if (bill_exists.status !== "aberta" && bill_exists.status !== "devolvida" && bill_exists.status !== "reprogramada") {
     throw new Error("Só é possível despachar notas com status aberta");
     
  }
@@ -120,13 +120,7 @@ async function change_status_bill_service(data, bill_id) {
         }
         console.log(bill_exists, "bill_exists");
         
-<<<<<<< HEAD
       
-=======
-        if (bill_exists.status !== "despachada") {
-            throw new Error("Só é possível aceitar notas que estão com o status despachada");
-                    }
->>>>>>> de8bb8af6a6a9a2aafb9c9598dd1586c11d9f134
         try {
         await bill_repository.change_status_bill(data, bill_id);
         return
