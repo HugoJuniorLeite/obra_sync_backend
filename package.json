@@ -23,6 +23,7 @@
   "homepage": "https://github.com/HugoJuniorLeite/obra_sync_backend#readme",
   "dependencies": {
     "@prisma/client": "^6.13.0",
+    "@supabase/supabase-js": "^2.56.1",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",

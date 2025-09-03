@@ -1,9 +1,9 @@
 import employee_repository from "../c.repositories/employee_repository.js";
 import bcrypt from "bcrypt";
 import project_repository from "../c.repositories/project_repository.js"
-async function register_employee(data) {
 
- 
+
+async function register_employee(data) {
     try {
     const employee_exists = await employee_repository.find_employee(data.cpf);
     if (employee_exists){
