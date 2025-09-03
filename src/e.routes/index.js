@@ -7,6 +7,7 @@ import occupation_router from "./occupation_router.js";
 import employee_router from "./employee_router.js";
 import bill_router from "./bill_router.js";
 import auth_router from "./auth_router.js";
+import rdo_router from "./rdo_router.js";
 
 const router = Router();
 
@@ -18,5 +19,6 @@ router.use(occupation_router);
 router.use(employee_router);
 router.use(bill_router);
 router.use(auth_router);
+router.use(rdo_router);
 
 export default router;

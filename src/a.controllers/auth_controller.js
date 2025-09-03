@@ -1,31 +1,52 @@
 import auth_service from "../b.services/auth_service.js";
 
 async function is_first_access_controller(req, res) {
-    const {cpf} = req.body;
- 
-    
-if (!cpf || cpf === undefined) {
-    res.status(400).send({message:"Obrigatório informar dados válidos"})
-}
+    const { cpf } = req.body;
 
-const access_already_exists = await auth_service.is_first_access_service(cpf);
+    if (!cpf) {
+        return res.status(400).json({ success: false, message: "Obrigatório informar dados válidos" });
+    }
 
-console.log(access_already_exists, "controller");
-
-if (access_already_exists.first_access) {
-    res.status(200).send({response:access_already_exists.first_access, message: "Por favor, digite sua senha"})
-} else {
-    res.status(200).send({response:access_already_exists.first_access, message: "Por favor, digite os 6 primeiros dígitos do seu cpf e uma nova senha de acesso"})
-}
     try {
+        const access_already_exists = await auth_service.is_first_access_service(cpf);
+
+        if (access_already_exists.first_access) {
+            return res.status(200).json({
+            
+                response: access_already_exists.first_access,
+                message: "Por favor, digite sua senha"
+            });
+        } else {
+            return res.status(200).json({
         
+                response: access_already_exists.first_access,
+                message: "Por favor, digite os 6 primeiros dígitos do seu CPF e uma nova senha de acesso"
+            });
+        }
     } catch (error) {
-        return res.status(error.status || 400).json({message: error.message})
+     
+        return res.status(404).json({
+            success: false,
+            message: error.message || "Erro inesperado"
+        });
+    }
+}
+
+async function change_password_controller(req, res) {
+    const {cpf, old_password, new_password} = req.body
+    if (!old_password || new_password) {
+        throw new Error("Dados inseridos são inválidos");
+        }
+    try {
+await auth_service.change_password_service(cpf, old_password, new_password)
+res.status(200).send("Senha alterada com sucesso!");
+    } catch (error) {
+        return res.status(error.status || 400).json({message: error.message}); 
     }
 }
 
 const auth_controller = {
-    is_first_access_controller,
+    is_first_access_controller, change_password_controller
 };
 
 export default auth_controller;
