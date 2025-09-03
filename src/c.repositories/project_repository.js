@@ -67,7 +67,7 @@ async function get_project_by_id(project_id) {
             where:{id: Number(project_id), active: true}
         })
     } catch (error) {
-        throw new Error(error.message);
+        throw new Error("groot chatooooo");
         
     }
 }
