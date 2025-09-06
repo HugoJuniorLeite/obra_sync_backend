@@ -74,8 +74,8 @@ model bill {
   project              project           @relation(fields: [project_id], references: [id])
   service              service           @relation(fields: [service_id], references: [id])
 
-  technical            employee?         @relation(fields: [technical_id], references: [id])
-  daily_reports        daily_report[]    @relation("bill_reports")
+  technical     employee?      @relation(fields: [technical_id], references: [id])
+  daily_reports daily_report[] @relation("bill_reports")
 
   @@map("bill")
 }
@@ -98,7 +98,8 @@ model project {
   firm                 firm           @relation(fields: [firm_id], references: [id])
   project_team         project_team[]
   services             service[]
-   @@index([start_date, estimated_end_date])
+
+  @@index([start_date, estimated_end_date])
 }
 
 model phone {
@@ -218,6 +219,7 @@ model employee {
   occupation      occupation     @relation(fields: [occupation_id], references: [id])
   phones          phone[]
   project_team    project_team[]
+  bill            bill[]
 
   @@map("employee")
 }
@@ -239,76 +241,76 @@ enum status_project {
 }
 
 model daily_report {
-  id                 Int           @id @default(autoincrement())
-  pipe_branch_diameter String
+  id                    Int         @id @default(autoincrement())
+  pipe_branch_diameter  String
   pipe_network_diameter String
-  signal_tape        Boolean
-  cut_location       String
-  branch_material    String
-  network_material   String
-  branch_position    String
-  network_pressure   String?
+  signal_tape           Boolean
+  cut_location          String
+  branch_material       String
+  network_material      String
+  branch_position       String
+  network_pressure      String?
   mechanical_protection Boolean
-  cut_branch         String
-  round_tachao       Boolean
-  capping_type       String
-  branch_type        String
-  created_at         DateTime      @default(now())
-  components   component[]
-  photos       photo?
-  welds        weld[]
-  trenches     trench[]
-  bill         bill   @relation("bill_reports", fields: [bill_id], references: [id])
-  bill_id      Int
+  cut_branch            String
+  round_tachao          Boolean
+  capping_type          String
+  branch_type           String
+  created_at            DateTime    @default(now())
+  components            component[]
+  photos                photo?
+  welds                 weld[]
+  trenches              trench[]
+  bill                  bill        @relation("bill_reports", fields: [bill_id], references: [id])
+  bill_id               Int
 }
 
 model component {
-  id                Int           @id @default(autoincrement())
-  name              String
-  size              String
-  manufacturer      String
-  batch             String
+  id           Int    @id @default(autoincrement())
+  name         String
+  size         String
+  manufacturer String
+  batch        String
 
-  daily_report      daily_report? @relation(fields: [daily_report_id], references: [id])
-  daily_report_id   Int?
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
 }
 
 model photo {
-  id                       Int           @id @default(autoincrement())
-  sidewalk_before          String?
-  sketch                   String?
-  front_house              String?
-  street_sign              String?
-  mechanical_protection    String?
-  provisional              String?
-  cut_branch               String?
-  exposed_branch           String?
-  tachao                   String?
+  id                    Int     @id @default(autoincrement())
+  sidewalk_before       String?
+  sketch                String?
+  front_house           String?
+  street_sign           String?
+  mechanical_protection String?
+  provisional           String?
+  cut_branch            String?
+  exposed_branch        String?
+  tachao                String?
 
-  daily_report     daily_report @relation(fields: [daily_report_id], references: [id])
-  daily_report_id  Int          @unique
+  daily_report    daily_report @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int          @unique
 }
 
 model weld {
-  id                Int           @id @default(autoincrement())
-  weld_number       String
-  component         String
-  approved          Boolean
-  cooling_time      String
+  id           Int     @id @default(autoincrement())
+  weld_number  String
+  component    String
+  approved     Boolean
+  cooling_time String
 
-  daily_report      daily_report? @relation(fields: [daily_report_id], references: [id])
-  daily_report_id   Int?
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
 }
 
 model trench {
-  id                Int           @id @default(autoincrement())
-  length            Int
-  width             Int
-  depth             Int
-  floor_type        String
+  id         Int    @id @default(autoincrement())
+  length     Int
+  width      Int
+  depth      Int
+  floor_type String
 
-  daily_report      daily_report? @relation(fields: [daily_report_id], references: [id])
-  daily_report_id   Int?
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
 }
 
 enum bill_status {
@@ -324,16 +326,15 @@ enum bill_status {
   reprogramada
 }
 
-
 model RDO {
-  id           Int      @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   posicaoRamal String?
   tipoRamal    String?
   ramalCortado String?
   localCorte   String?
   comentario   String?
 
-  uploads      Upload[]
+  uploads Upload[]
 }
 
 model Upload {
@@ -342,7 +343,6 @@ model Upload {
   url       String
   createdAt DateTime @default(now())
 
-  rdoId     Int?
-  rdo       RDO?     @relation(fields: [rdoId], references: [id])
+  rdoId Int?
+  rdo   RDO? @relation(fields: [rdoId], references: [id])
 }
-
