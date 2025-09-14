@@ -81,6 +81,25 @@ model bill {
   @@map("bill")
 }
 
+model street_data {
+  id                 Int    @id @default(autoincrement())
+  daily_report       daily_report @relation(fields: [daily_report_id], references: [id])
+  daily_report_id    Int          @unique  
+  a_left             String?
+  a_right            String?
+  b                  String?
+  page               String?
+  pcprevgb           String?
+  number_left        String?
+  number_center      String?
+  number_right       String?
+  street_width       String?
+  street_left        String?
+  street_center      String?
+  street_right       String?
+  cpprevgb_building  String?
+}
+
 model project {
   id                   Int            @id @default(autoincrement())
   name                 String
@@ -262,6 +281,8 @@ model daily_report {
   trenches              trench[]
   bill                  bill        @relation("bill_reports", fields: [bill_id], references: [id])
   bill_id               Int
+  street_data  street_data?
+
 }
 
 model component {
