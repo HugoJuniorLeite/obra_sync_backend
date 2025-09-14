@@ -1,24 +1,3 @@
-// import rdo_service from "../b.services/rdo_service.js";
-
-// async function create_rdo_controller(req, res) {
-//     const data = req.body;
-//     if (!data) {
-//         return res.status(error.status || 400).json({message: error.message});
-//     }
-//     try {
-//        const created_rdo = await rdo_service.create_rdo_service(data);
-//         res.status(200).send(created_rdo);
-//     } catch (error) {
-//         return res.status(error.status || 400).json({message: error.message});      
-//     }
-// }
-
-// const rdo_controller = {
-//     create_rdo_controller,
-// };
-
-// export default rdo_controller;
-
 import rdo_service from "../b.services/rdo_service.js";
 import multer from "multer";
 import supabase from "../supabaseClient.js";
@@ -104,8 +83,47 @@ console.log("Body mapeado:", mapped_body);
     }
 }
 
+async function rdo_not_executed(req, res) {
+const data = req.body;
+const {bill_id }= req.params
+console.log(data, bill_id);
+
+try {
+    await rdo_service.rdo_not_executed(bill_id, data);
+    res.status(201).send("Nota não executada. Seu gestor será notificado.")
+} catch (error) {
+    return res.status(error.status || 400).json({ message: error.message });
+}
+}
+
+async function get_rdo_by_bill_id_controller(req, res) {
+    const {bill_id} = req.params;
+    if (!bill_id) {
+        throw new Error("Dados inválidos");
+            }
+            try {
+                const rdo_by_bill = await rdo_service.get_rdo_by_bill_id_service(bill_id);
+                return res.status(200).send({rdo: rdo_by_bill});
+            } catch (error) {
+                return res.status(error.status || 400).json({ message: error.message });
+            }
+
+}
+
+async function get_rdo_by_project_controller(req, res) {
+    const {project_id} = req.params;
+    if (!project_id) {
+        throw new Error("Projeto inválido!");
+            }
+    try {
+        const rdo_list_by_project = await rdo_service.get_rdo_by_project_id_service(project_id);
+        return res.status(200).send({rdo_list: rdo_list_by_project})
+    } catch (error) {
+        return res.status(error.status || 400).json({ message: error.message });
+    }
+}
 const rdo_controller = {
-    create_rdo_controller,
+    create_rdo_controller, rdo_not_executed, get_rdo_by_bill_id_controller, get_rdo_by_project_controller
 };
 
 export default rdo_controller;

@@ -92,6 +92,24 @@
 import prisma from "../database/prismaClient.js";
 
 async function create_rdo_repository(data) {
+
+    function map_street_data(data) {
+    return {
+        a_left: data.A_esquerda,
+        a_right: data.A_direita,
+        b: data.B,
+        page: data.Pg,
+        pcprevgb: data.PCPREVGB,
+        number_left: data.Numero_esquerda,
+        number_center: data.Numero_centro,
+        number_right: data.Numero_direita,
+        street_width: data.Largura_logradouro,
+        street_left: data.Rua_esquerda,
+        street_center: data.Rua_centro,
+        street_right: data.Rua_direita,
+        cpprevgb_building: data.CPREVGB_Predial
+    };
+} 
     return prisma.$transaction(async (tx) => {
         const daily_report = await tx.daily_report.create({
             data: {
@@ -144,7 +162,9 @@ async function create_rdo_repository(data) {
                         cooling_time: s.tempoResfriamento,
                     })),
                 },
-
+            street_data: {
+    create: map_street_data(data)
+},
                 trenches: {
                     create: (data.trenches || []).map((v) => ({
                         length: parseInt(v.comprimento),
@@ -160,10 +180,11 @@ async function create_rdo_repository(data) {
                 welds: true,
                 trenches: true,
                 bill: true,
+                street_data: true
             },
         });
 
-        // Atualiza o status da Bill
+      
         await tx.bill.update({
             where: { id: data.bill_id },
             data: { status: data.resultado },
@@ -173,8 +194,47 @@ async function create_rdo_repository(data) {
     });
 }
 
+async function rdo_not_executed(bill_id, data) {
+  try {
+    return prisma.bill.update({
+        where: { id: Number(bill_id) },
+        data: { status: "nao_executada",
+            ...(data.note && { note: data.note }),
+            ...(data.detail && { detail: data.detail })
+         },
+      });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+async function get_rdo_by_bill_id(bill_id) {
+    return prisma.daily_report.findFirst({
+        where: {
+            bill_id: Number(bill_id),
+        },
+        include: {
+            components: true,
+            photos: true,
+            trenches: true,
+            welds: true,
+        },
+    });
+}
+
+async function get_bill_by_project(project_id) {
+    try {
+        return prisma.bill.findMany({
+            where: {project_id: Number(project_id)}
+        })
+    } catch (error) {
+        throw new Error(error.message);
+        
+    }
+}
+
 const rdo_repository = {
-    create_rdo_repository,
+    create_rdo_repository, rdo_not_executed, get_rdo_by_bill_id,get_bill_by_project
 };
 
 export default rdo_repository;
