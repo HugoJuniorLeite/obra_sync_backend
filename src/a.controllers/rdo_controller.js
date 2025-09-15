@@ -49,7 +49,7 @@ function map_fields_to_english(data, fotosUrls) {
         round_tachao: data.tachaoRedondo === "true",
         capping_type: data.tipoCapeamento,
         branch_type: data.tipoRamal,
-        bill_id: data.billId,
+        bill_id: data.bill_id,
         components: data.componentes || [],
         welds: data.soldas || [],
         trenches: data.valas || [],

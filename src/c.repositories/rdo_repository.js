@@ -92,22 +92,32 @@
 import prisma from "../database/prismaClient.js";
 
 async function create_rdo_repository(data) {
+console.log(data, "repository");
+const croquisKeys = Object.keys(data.croquis); 
+
+const croquisData = data.croquis[croquisKeys[0]];
 
 function map_street_data(data) {
+     if (!data.croquis || Object.keys(data.croquis).length === 0) return {};
+    console.log(data, "croquissss");
+    
   if (!data.croquis) return {};
 
+  const croquisKeys = Object.keys(data.croquis);
+  const c = data.croquis[croquisKeys[0]];
+
   return {
-    right_side: data.croquis.A_direita,
-    left_side: data.croquis.A_esquerda,
-    point_b: data.croquis.B,
-    pg: data.croquis.Pg,
-    number_right: data.croquis.Numero_direita,
-    number_left: data.croquis.Numero_esquerda,
-    street_right: data.croquis.Rua_direita,
-    street_left: data.croquis.Rua_esquerda,
-    street_width: data.croquis.Largura_logradouro,
-    cut_location: data.croquis.localCorte,
-    cut_branch: data.croquis.ramalCortado,
+     right_side: c.A_direita,
+    left_side: c.A_esquerda,
+    point_b: c.B,
+    pg: c.Pg,
+    number_right: c.Numero_direita,
+    number_left: c.Numero_esquerda,
+    street_right: c.Rua_direita,
+    street_left: c.Rua_esquerda,
+    street_width: c.Largura_logradouro,
+    cut_location: c.localCorte,
+    cut_branch: c.ramalCortado,
   };
 }
     return prisma.$transaction(async (tx) => {
@@ -128,7 +138,7 @@ function map_street_data(data) {
                 branch_type: data.branch_type,
                
 
-                bill: { connect: { id: data.bill_id } },
+                bill: { connect: { id: Number(data.bill_id) } },
 
                 components: {
                     create: (data.components || []).map((c) => ({
