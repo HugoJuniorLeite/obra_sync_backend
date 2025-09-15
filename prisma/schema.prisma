@@ -82,22 +82,21 @@ model bill {
 }
 
 model street_data {
-  id                 Int    @id @default(autoincrement())
-  daily_report       daily_report @relation(fields: [daily_report_id], references: [id])
-  daily_report_id    Int          @unique  
-  a_left             String?
-  a_right            String?
-  b                  String?
-  page               String?
-  pcprevgb           String?
-  number_left        String?
-  number_center      String?
-  number_right       String?
-  street_width       String?
-  street_left        String?
-  street_center      String?
-  street_right       String?
-  cpprevgb_building  String?
+  id              Int          @id @default(autoincrement())
+  daily_report    daily_report @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int          @unique  
+
+  right_side      String
+  left_side       String
+  point_b         String
+  pg              String
+  number_right    String
+  number_left     String
+  street_right    String
+  street_left     String
+  street_width    String
+  cut_location    String
+  cut_branch      String
 }
 
 model project {
@@ -296,17 +295,17 @@ model component {
   daily_report_id Int?
 }
 
+
 model photo {
   id                    Int     @id @default(autoincrement())
   sidewalk_before       String?
-  sketch                String?
   front_house           String?
   street_sign           String?
   mechanical_protection String?
   provisional           String?
   cut_branch            String?
   exposed_branch        String?
-  tachao                String?
+  tachao                String?   // 👈 agora cobre o fotoTachao
 
   daily_report    daily_report @relation(fields: [daily_report_id], references: [id])
   daily_report_id Int          @unique
@@ -329,9 +328,23 @@ model trench {
   width      Int
   depth      Int
   floor_type String
-
   daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
   daily_report_id Int?
+}
+
+model sketch {
+  id               Int     @id @default(autoincrement())
+  right_side        String
+  left_side         String
+  point_b          String
+  pg               String
+  number_right      String
+  number_left       String
+  street_right      String
+  street_left       String
+  street_width      String
+  cut_location      String
+  cut_branch        String
 }
 
 enum bill_status {

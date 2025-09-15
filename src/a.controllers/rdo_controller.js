@@ -23,14 +23,14 @@ async function upload_photo_to_supabase(file) {
 
 // Middleware para aceitar múltiplos arquivos
 export const upload_photos_middleware = upload.fields([
-    { name: "fotoCalcadaAntes" },
-    { name: "fotoCroqui" },
-    { name: "fotoFrenteImovel" },
-    { name: "fotoPlacaRua" },
-    { name: "fotoProtecaoMecanica" },
-    { name: "fotoProvisorio" },
-    { name: "fotoRamalCortado" },
-    { name: "fotoRamalExposto" },
+    { name: "fotoCalcadaAntesKey" },
+    { name: "fotoFrenteImovelKey" },
+    { name: "fotoPlacaRuaKey" },
+    { name: "fotoProtecaoMecanicaKey" },
+    { name: "fotoProvisorioKey" },
+    { name: "fotoRamalCortadoKey" },
+    { name: "fotoRamalExpostoKey" },
+    {name: "fotoTachao"}
 ]);
 
 // Mapeia campos do JSON em português para inglês
@@ -64,6 +64,7 @@ async function create_rdo_controller(req, res) {
         const body = JSON.parse(req.body.data); // JSON enviado pelo frontend
         const files = req.files || {};
         const fotosUrls = {};
+console.log(req.body, req.files, "TESTESSSSSSSSSSSSSSSSS");
 
         // Upload das fotos e mapeamento
         for (const key in files) {

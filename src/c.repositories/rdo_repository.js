@@ -93,23 +93,23 @@ import prisma from "../database/prismaClient.js";
 
 async function create_rdo_repository(data) {
 
-    function map_street_data(data) {
-    return {
-        a_left: data.A_esquerda,
-        a_right: data.A_direita,
-        b: data.B,
-        page: data.Pg,
-        pcprevgb: data.PCPREVGB,
-        number_left: data.Numero_esquerda,
-        number_center: data.Numero_centro,
-        number_right: data.Numero_direita,
-        street_width: data.Largura_logradouro,
-        street_left: data.Rua_esquerda,
-        street_center: data.Rua_centro,
-        street_right: data.Rua_direita,
-        cpprevgb_building: data.CPREVGB_Predial
-    };
-} 
+function map_street_data(data) {
+  if (!data.croquis) return {};
+
+  return {
+    right_side: data.croquis.A_direita,
+    left_side: data.croquis.A_esquerda,
+    point_b: data.croquis.B,
+    pg: data.croquis.Pg,
+    number_right: data.croquis.Numero_direita,
+    number_left: data.croquis.Numero_esquerda,
+    street_right: data.croquis.Rua_direita,
+    street_left: data.croquis.Rua_esquerda,
+    street_width: data.croquis.Largura_logradouro,
+    cut_location: data.croquis.localCorte,
+    cut_branch: data.croquis.ramalCortado,
+  };
+}
     return prisma.$transaction(async (tx) => {
         const daily_report = await tx.daily_report.create({
             data: {
@@ -139,20 +139,21 @@ async function create_rdo_repository(data) {
                     })),
                 },
 
-                photos: data.photos
-                    ? {
-                          create: {
-                              sidewalk_before: data.photos.fotoCalcadaAntes,
-                              sketch: data.photos.fotoCroqui,
-                              front_house: data.photos.fotoFrenteImovel,
-                              street_sign: data.photos.fotoPlacaRua,
-                              mechanical_protection: data.photos.fotoProtecaoMecanica,
-                              provisional: data.photos.fotoProvisorio,
-                              cut_branch: data.photos.fotoRamalCortado,
-                              exposed_branch: data.photos.fotoRamalExposto,
-                          },
-                      }
-                    : undefined,
+               photos: data.photos
+  ? {
+      create: {
+        sidewalk_before: data.photos.fotoCalcadaAntesKey,
+        // sketch: data.photos.fotoCroqui,
+        front_house: data.photos.fotoFrenteImovelKey,
+        street_sign: data.photos.fotoPlacaRuaKey,
+        mechanical_protection: data.photos.fotoProtecaoMecanicaKey,
+        provisional: data.photos.fotoProvisorioKey,
+        cut_branch: data.photos.fotoRamalCortadoKey,
+        exposed_branch: data.photos.fotoRamalExpostoKey,
+        tachao: data.photos.fotoTachao,
+      },
+    }
+  : undefined,
 
                 welds: {
                     create: (data.welds || []).map((s) => ({
