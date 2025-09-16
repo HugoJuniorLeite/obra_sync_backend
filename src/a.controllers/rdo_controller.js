@@ -21,20 +21,22 @@ async function upload_photo_to_supabase(file) {
     return public_url.publicUrl;
 }
 
+
 // Middleware para aceitar múltiplos arquivos
-export const upload_photos_middleware = upload.fields([
+const upload_photos_middleware = upload.fields([
     { name: "fotoCalcadaAntes" },
-    { name: "fotoCroqui" },
     { name: "fotoFrenteImovel" },
     { name: "fotoPlacaRua" },
     { name: "fotoProtecaoMecanica" },
     { name: "fotoProvisorio" },
     { name: "fotoRamalCortado" },
     { name: "fotoRamalExposto" },
+      { name: "fotoTachao" },
 ]);
 
 // Mapeia campos do JSON em português para inglês
-function map_fields_to_english(data, fotosUrls) {
+// Mapeia campos do JSON em português para inglês
+function map_fields_to_english(data, fotosUrls = {}) {
     return {
         pipe_branch_diameter: data.diametroRamal,
         pipe_network_diameter: data.diametroRede,
@@ -49,38 +51,64 @@ function map_fields_to_english(data, fotosUrls) {
         round_tachao: data.tachaoRedondo === "true",
         capping_type: data.tipoCapeamento,
         branch_type: data.tipoRamal,
-        bill_id: data.billId,
+        bill_id: data.id,
         components: data.componentes || [],
         welds: data.soldas || [],
         trenches: data.valas || [],
-        photos: fotosUrls || {},
+        photos: {
+            sidewalk_before: fotosUrls.fotoCalcadaAntes || null,
+            sketch: fotosUrls.fotoCroqui || null,
+            front_house: fotosUrls.fotoFrenteImovel || null,
+            street_sign: fotosUrls.fotoPlacaRua || null,
+            mechanical_protection: fotosUrls.fotoProtecaoMecanica || null,
+            provisional: fotosUrls.fotoProvisorio || null,
+            cut_branch: fotosUrls.fotoRamalCortado || null,
+            exposed_branch: fotosUrls.fotoRamalExposto || null,
+        },
         resultado: data.resultado
     };
 }
+// controllers/rdo_controller.js
 
-// Controller principal
+// ... imports e funções anteriores ...
 async function create_rdo_controller(req, res) {
-    try {
-        const body = JSON.parse(req.body.data); // JSON enviado pelo frontend
-        const files = req.files || {};
-        const fotosUrls = {};
+  try {
+    console.log('--- DEBUG REQ.FILES ---');
+    // console.log('req.files:', req.files); // Deve ser objeto com arrays
+    console.log('req.body.data:', req.body.data);
 
-        // Upload das fotos e mapeamento
-        for (const key in files) {
-            fotosUrls[key] = await upload_photo_to_supabase(files[key][0]);
-        }
-
-        // Mapeia o JSON para inglês
-        const mapped_body = map_fields_to_english(body, fotosUrls);
-console.log("Body recebido:", body);
-console.log("Body mapeado:", mapped_body);
-
-        const created_rdo = await rdo_service.create_rdo_service(mapped_body);
-        res.status(200).send(created_rdo);
-    } catch (error) {
-        console.error(error);
-        return res.status(error.status || 400).json({ message: error.message });
+    if (!req.files) {
+      return res.status(400).json({ error: 'Nenhum arquivo recebido' });
     }
+
+    const body = JSON.parse(req.body.data);
+    const files = req.files;
+    const fotosUrls = {};
+
+    for (const fieldName in files) {
+      const file = files[fieldName][0]; // ← [0] é OBRIGATÓRIO
+      console.log(`📁 Processando ${fieldName}:`, {
+        name: file.originalname,
+        size: file.size,
+        mimetype: file.mimetype,
+        bufferExists: !!file.buffer // multer.memoryStorage() gera .buffer
+      });
+
+      fotosUrls[fieldName] = await upload_photo_to_supabase(file);
+    }
+
+    const mapped_body = map_fields_to_english(body, fotosUrls);
+    const created_rdo = await rdo_service.create_rdo_service(mapped_body);
+
+    res.status(201).json({
+      message: "RDO criado com sucesso!",
+      fotos: fotosUrls
+    });
+
+  } catch (error) {
+    console.error("❌ Erro no controller:", error);
+    res.status(500).json({ message: error.message });
+  }
 }
 
 async function rdo_not_executed(req, res) {
@@ -126,4 +154,9 @@ const rdo_controller = {
     create_rdo_controller, rdo_not_executed, get_rdo_by_bill_id_controller, get_rdo_by_project_controller
 };
 
-export default rdo_controller;
+// No final do rdo_controller.js
+export { upload_photos_middleware }; // ✅ Exporta como nomeado
+
+export default rdo_controller; // ✅ Exporta controller como default
+
+

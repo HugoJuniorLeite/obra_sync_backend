@@ -92,9 +92,12 @@
 import prisma from "../database/prismaClient.js";
 
 async function create_rdo_repository(data) {
-
+    // console.log(data, "repository");
+    
+try {
+    
     function map_street_data(data) {
-    return {
+        return {
         a_left: data.A_esquerda,
         a_right: data.A_direita,
         b: data.B,
@@ -110,61 +113,61 @@ async function create_rdo_repository(data) {
         cpprevgb_building: data.CPREVGB_Predial
     };
 } 
-    return prisma.$transaction(async (tx) => {
-        const daily_report = await tx.daily_report.create({
-            data: {
-                pipe_branch_diameter: data.pipe_branch_diameter,
-                pipe_network_diameter: data.pipe_network_diameter,
-                signal_tape: data.signal_tape,
-                cut_location: data.cut_location,
-                branch_material: data.branch_material,
-                network_material: data.network_material,
-                branch_position: data.branch_position,
-                network_pressure: data.network_pressure || null,
-                mechanical_protection: data.mechanical_protection,
-                cut_branch: data.cut_branch,
-                round_tachao: data.round_tachao,
-                capping_type: data.capping_type,
-                branch_type: data.branch_type,
-               
-
-                bill: { connect: { id: data.bill_id } },
-
-                components: {
-                    create: (data.components || []).map((c) => ({
+return prisma.$transaction(async (tx) => {
+    const daily_report = await tx.daily_report.create({
+        data: {
+            pipe_branch_diameter: data.pipe_branch_diameter,
+            pipe_network_diameter: data.pipe_network_diameter,
+            signal_tape: data.signal_tape,
+            cut_location: data.cut_location,
+            branch_material: data.branch_material,
+            network_material: data.network_material,
+            branch_position: data.branch_position,
+            network_pressure: data.network_pressure || null,
+            mechanical_protection: data.mechanical_protection,
+            cut_branch: data.cut_branch,
+            round_tachao: data.round_tachao,
+            capping_type: data.capping_type,
+            branch_type: data.branch_type,
+            
+            
+            bill: { connect: { id: Number(data.bill_id) } },
+            
+            components: {
+                create: (data.components || []).map((c) => ({
                         name: c.componente,
                         size: c.de,
                         manufacturer: c.fabricante,
                         batch: c.lote,
                     })),
                 },
-
-                photos: data.photos
-                    ? {
-                          create: {
-                              sidewalk_before: data.photos.fotoCalcadaAntes,
-                              sketch: data.photos.fotoCroqui,
-                              front_house: data.photos.fotoFrenteImovel,
-                              street_sign: data.photos.fotoPlacaRua,
-                              mechanical_protection: data.photos.fotoProtecaoMecanica,
-                              provisional: data.photos.fotoProvisorio,
-                              cut_branch: data.photos.fotoRamalCortado,
-                              exposed_branch: data.photos.fotoRamalExposto,
-                          },
-                      }
-                    : undefined,
-
-                welds: {
-                    create: (data.welds || []).map((s) => ({
+                
+      photos: data.photos
+    ? {
+        create: {
+            sidewalk_before: data.photos.fotoCalcadaAntes,
+            sketch: data.photos.fotoCroqui,
+            front_house: data.photos.fotoFrenteImovel,
+            street_sign: data.photos.fotoPlacaRua,
+            mechanical_protection: data.photos.fotoProtecaoMecanica,
+            provisional: data.photos.fotoProvisorio,
+            cut_branch: data.photos.fotoRamalCortado,
+            exposed_branch: data.photos.fotoRamalExposto,
+        },
+    }
+    : undefined,
+                        
+                        welds: {
+                            create: (data.welds || []).map((s) => ({
                         weld_number: s.numeroSolda,
                         component: s.componente,
                         approved: s.aprovado === "Sim",
                         cooling_time: s.tempoResfriamento,
                     })),
                 },
-            street_data: {
-    create: map_street_data(data)
-},
+                street_data: {
+                    create: map_street_data(data)
+                },
                 trenches: {
                     create: (data.trenches || []).map((v) => ({
                         length: parseInt(v.comprimento),
@@ -183,15 +186,18 @@ async function create_rdo_repository(data) {
                 street_data: true
             },
         });
-
-      
+        
+        
         await tx.bill.update({
-            where: { id: data.bill_id },
+            where: { id: Number(data.bill_id) },
             data: { status: data.resultado },
         });
-
+        
         return daily_report;
     });
+} catch (error) {
+    
+}
 }
 
 async function rdo_not_executed(bill_id, data) {

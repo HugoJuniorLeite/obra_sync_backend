@@ -24,6 +24,7 @@
   "dependencies": {
     "@prisma/client": "^6.13.0",
     "@supabase/supabase-js": "^2.56.1",
+    "adm-zip": "^0.5.16",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
@@ -31,7 +32,9 @@
     "express": "^5.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "jszip": "^3.10.1",
     "multer": "^2.0.2",
+    "multiparty": "^4.2.3",
     "nodemailer": "^7.0.5",
     "nodemon": "^3.1.10",
     "uuid": "^11.1.0"
