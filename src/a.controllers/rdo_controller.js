@@ -35,8 +35,8 @@ const upload_photos_middleware = upload.fields([
 ]);
 
 // Mapeia campos do JSON em português para inglês
-// Mapeia campos do JSON em português para inglês
 function map_fields_to_english(data, fotosUrls = {}) {
+
     return {
         pipe_branch_diameter: data.diametroRamal,
         pipe_network_diameter: data.diametroRede,
@@ -55,15 +55,17 @@ function map_fields_to_english(data, fotosUrls = {}) {
         components: data.componentes || [],
         welds: data.soldas || [],
         trenches: data.valas || [],
+       street_data: data.croquis ? Object.values(data.croquis)[0] : {},
         photos: {
             sidewalk_before: fotosUrls.fotoCalcadaAntes || null,
-            sketch: fotosUrls.fotoCroqui || null,
+            //sketch: fotosUrls.fotoCroqui || null,
             front_house: fotosUrls.fotoFrenteImovel || null,
             street_sign: fotosUrls.fotoPlacaRua || null,
             mechanical_protection: fotosUrls.fotoProtecaoMecanica || null,
             provisional: fotosUrls.fotoProvisorio || null,
             cut_branch: fotosUrls.fotoRamalCortado || null,
             exposed_branch: fotosUrls.fotoRamalExposto || null,
+            tachao: fotosUrls.fotoTachao || null
         },
         resultado: data.resultado
     };
@@ -74,8 +76,8 @@ function map_fields_to_english(data, fotosUrls = {}) {
 async function create_rdo_controller(req, res) {
   try {
     console.log('--- DEBUG REQ.FILES ---');
-    // console.log('req.files:', req.files); // Deve ser objeto com arrays
-    console.log('req.body.data:', req.body.data);
+
+   console.log('req.body:',req.body);
 
     if (!req.files) {
       return res.status(400).json({ error: 'Nenhum arquivo recebido' });
@@ -84,6 +86,7 @@ async function create_rdo_controller(req, res) {
     const body = JSON.parse(req.body.data);
     const files = req.files;
     const fotosUrls = {};
+console.log(body, "body");
 
     for (const fieldName in files) {
       const file = files[fieldName][0]; // ← [0] é OBRIGATÓRIO
@@ -114,7 +117,7 @@ async function create_rdo_controller(req, res) {
 async function rdo_not_executed(req, res) {
 const data = req.body;
 const {bill_id }= req.params
-console.log(data, bill_id);
+// console.log(data, bill_id);
 
 try {
     await rdo_service.rdo_not_executed(bill_id, data);

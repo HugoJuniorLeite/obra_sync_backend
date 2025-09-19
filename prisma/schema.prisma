@@ -82,23 +82,22 @@ model bill {
 }
 
 model street_data {
-  id                 Int    @id @default(autoincrement())
-  daily_report       daily_report @relation(fields: [daily_report_id], references: [id])
-  daily_report_id    Int          @unique  
-  a_left             String?
-  a_right            String?
-  b                  String?
-  page               String?
-  pcprevgb           String?
-  number_left        String?
-  number_center      String?
-  number_right       String?
-  street_width       String?
-  street_left        String?
-  street_center      String?
-  street_right       String?
-  cpprevgb_building  String?
+  id                 Int     @id @default(autoincrement())
+  branch_cut         String  // ramalCortado
+  cut_location       String  // localCorte
+  left_street        String  // Rua_esquerda
+  left_point_a       String  // A_esquerda
+  center_street      String  // Rua_centro
+  right_point_a      String  // A_direita
+  street_width       String  // Largura_logradouro
+  page_number        String  // Pg
+  right_street       String  // Rua_direita
+  left_number        String  // Numero_esquerda
+  center_number      String  // Numero_centro
+  right_number       String  // Numero_direita
+  daily_report       daily_report?
 }
+
 
 model project {
   id                   Int            @id @default(autoincrement())
@@ -264,25 +263,25 @@ model daily_report {
   pipe_branch_diameter  String
   pipe_network_diameter String
   signal_tape           Boolean
+  round_tachao          Boolean
+  capping_type          String
+  branch_type           String
   cut_location          String
   branch_material       String
   network_material      String
   branch_position       String
-  network_pressure      String?
+  network_pressure      String
   mechanical_protection Boolean
   cut_branch            String
-  round_tachao          Boolean
-  capping_type          String
-  branch_type           String
   created_at            DateTime    @default(now())
   components            component[]
-  photos                photo?
+  photos                photo[]
   welds                 weld[]
   trenches              trench[]
   bill                  bill        @relation("bill_reports", fields: [bill_id], references: [id])
   bill_id               Int
-  street_data  street_data?
-
+  streetDataId  Int?    @unique    
+  street_data   street_data? @relation(fields: [streetDataId], references: [id])
 }
 
 model component {
@@ -299,7 +298,7 @@ model component {
 model photo {
   id                    Int     @id @default(autoincrement())
   sidewalk_before       String?
-  sketch                String?
+
   front_house           String?
   street_sign           String?
   mechanical_protection String?
@@ -309,7 +308,7 @@ model photo {
   tachao                String?
 
   daily_report    daily_report @relation(fields: [daily_report_id], references: [id])
-  daily_report_id Int          @unique
+  daily_report_id       Int    @unique     
 }
 
 model weld {

@@ -4,6 +4,7 @@ import employee_repository from "../c.repositories/employee_repository.js";
 import project_team_repository from "../c.repositories/project_team_repository.js";
 
 async function create_bill_service(data) {
+console.log(data, "dataaaa");
 
     if (!data) {
         throw new Error("Dados nulos no service");
@@ -28,7 +29,7 @@ async function create_bill_service(data) {
 }
 
 async function dispatch_bill_service(data, bill_id) {
-    console.log(data, bill_id, "service");
+    //console.log(data, bill_id, "service");
     
     if (!data || data === undefined || data === null) {
         throw new Error("Dados nulos no service");
@@ -38,14 +39,14 @@ async function dispatch_bill_service(data, bill_id) {
         if (!bill_exists || bill_exists === null || bill_exists === undefined) {
             throw new Error("Nota de atendimento não encontrada!");
             }
- console.log(bill_exists);
- console.log(data);
+ console.log(bill_exists, "dispatch bill service");
+ console.log(data , "dispatch service II");
  
- if (bill_exists.status !== "aberta" || bill_exists.status !== "devolvida" || bill_exists.status !== "reprogramada") {
+ if (bill_exists.status !== "aberta" && bill_exists.status !== "devolvida" && bill_exists.status !== "reprogramada") {
     throw new Error("Só é possível despachar notas com status aberta");
     
  }
-        await bill_repository.dispatch_bill(data, bill_exists.id)
+        await bill_repository.dispatch_bill(data, bill_id)
     } catch (error) {
         throw new Error(error.message); 
     }
@@ -120,7 +121,7 @@ async function change_status_bill_service(data, bill_id) {
         }
         console.log(bill_exists, "bill_exists");
         
-        if (bill_exists.status !== "despachada") {
+        if (bill_exists.status !== "despachada" && bill_exists.status !== "aceita" && bill_exists.status !== "em_atendimento" && bill_exists.status !== "em_deslocamento") {
             throw new Error("Só é possível aceitar notas que estão com o status despachada");
                     }
         try {

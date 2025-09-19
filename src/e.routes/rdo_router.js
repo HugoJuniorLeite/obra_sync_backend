@@ -20,15 +20,15 @@ const rdo_router = Router();
 
 rdo_router.post("/create-rdo",
   (req, res, next) => {
-    console.log("✅ ROTA /create-rdo FOI CHAMADA!");
-    console.log("📌 Método:", req.method);
-    console.log("🌐 URL:", req.url);
-    console.log("📨 Content-Type:", req.headers["content-type"]);
+    // console.log("✅ ROTA /create-rdo FOI CHAMADA!");
+    // console.log("📌 Método:", req.method);
+    // console.log("🌐 URL:", req.url);
+    // console.log("📨 Content-Type:", req.headers["content-type"]);
     next();
   },
   upload_photos_middleware,
   (req, res, next) => {
-    console.log("📸 Após multer, req.files:", req.files);
+    // console.log("📸 Após multer, req.files:", req.files);
     next();
   },
   rdo_controller.create_rdo_controller

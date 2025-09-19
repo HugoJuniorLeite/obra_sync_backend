@@ -17,7 +17,7 @@ async function create_project_team(project_id, employee_id) {
     }
 }
 async function get_project_by_employee(employee_id) {
-    console.log(employee_id, "project team");
+    //console.log(employee_id, "project team");
     
     try {
         return prisma.project_team.findFirst({

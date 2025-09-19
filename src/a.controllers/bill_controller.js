@@ -2,7 +2,7 @@ import bill_service from "../b.services/bill_service.js";
 
 async function create_bill_controller(req,res) {
     const data = req.body;
-    console.log(data, "controller");
+    console.log(data, "controller_bill");
     
     if (!data || data === undefined) {
         throw new Error("Obrigatório informar dados válidos");
@@ -18,7 +18,7 @@ async function create_bill_controller(req,res) {
 async function dispatch_bill_controller(req, res) {
     const data = req.body;
     const bill_id = req.params.bill_id;
-    console.log(data, "data");
+    console.log(data, "data dispatch Bill");
     console.log(bill_id, "id");
     
     

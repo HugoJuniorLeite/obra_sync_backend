@@ -92,33 +92,71 @@
 import prisma from "../database/prismaClient.js";
 
 async function create_rdo_repository(data) {
-    // console.log(data, "repository");
     
-try {
+    try {
+        
+//         function map_street_data(data) {
+//   return {
+//     a_left: data.H,                     // antes "A_esquerda"
+//     a_right: data.G,                    // antes "A_direita"
+//     b: data.S,                          // antes "B"
+//     page: data.PCRA,                    // antes "Pg"
+//     pcprevgb: data["PVGB="],            // antes "PCPREVGB"
+//     number_left: data.Numero_esquerda,  // se não vier do front, vai null
+//     number_center: data.R,              // antes "Rua_centro"
+//     number_right: data.Numero_direita,  // se não vier do front, vai null
+//     street_width: data.Largura_logradouro, 
+//     street_left: data.Rua_esquerda,
+//     street_center: data.R,              // pode usar "R" como centro
+//     street_right: data.Rua_direita,
+//     cpprevgb_building: data.CPC_predial,
+
+//     ramalCortado: data.ramalCortado,    // talvez precise criar col no schema
+//     localCorte: data.localCorte         // idem
+//   };
+// }
+
+function map_street_data(data) {
     
-    function map_street_data(data) {
-        return {
-        a_left: data.A_esquerda,
-        a_right: data.A_direita,
-        b: data.B,
-        page: data.Pg,
-        pcprevgb: data.PCPREVGB,
-        number_left: data.Numero_esquerda,
-        number_center: data.Numero_centro,
-        number_right: data.Numero_direita,
-        street_width: data.Largura_logradouro,
-        street_left: data.Rua_esquerda,
-        street_center: data.Rua_centro,
-        street_right: data.Rua_direita,
-        cpprevgb_building: data.CPREVGB_Predial
+   
+    return {
+  branch_cut : data.ramalCortado,
+  //   ramalCortado: 'principal',
+  cut_location : data.localCorte,
+  //   localCorte: 'geral',
+  left_street : data.Rua_esquerda,
+  //   Rua_esquerda: 'Left',
+  left_point_a : data.A_esquerda,
+  //   A_esquerda: '1',
+  center_street : data.Rua_centro,
+  //   Rua_centro: 'Center',
+  right_point_a : data.A_direita,
+  //   A_direita: '2',
+  street_width : data.Largura_logradouro,
+  //   Largura_logradouro: 'C'
+  page_number : data.Pg,
+  //   Pg: 'Pg',
+  right_street : data.Rua_direita,
+  //   Rua_direita: 'Right',
+  left_number : data.Numero_esquerda,
+  //   Numero_esquerda: '4',
+  center_number : data. Numero_centro,
+  //   Numero_centro: '3',
+  right_number : data.Numero_direita
+  //   Numero_direita: '5',
+
+    }
     };
-} 
+
 return prisma.$transaction(async (tx) => {
     const daily_report = await tx.daily_report.create({
         data: {
             pipe_branch_diameter: data.pipe_branch_diameter,
             pipe_network_diameter: data.pipe_network_diameter,
             signal_tape: data.signal_tape,
+            round_tachao: data.round_tachao,
+            capping_type: data.capping_type,
+            branch_type: data.branch_type,
             cut_location: data.cut_location,
             branch_material: data.branch_material,
             network_material: data.network_material,
@@ -126,9 +164,6 @@ return prisma.$transaction(async (tx) => {
             network_pressure: data.network_pressure || null,
             mechanical_protection: data.mechanical_protection,
             cut_branch: data.cut_branch,
-            round_tachao: data.round_tachao,
-            capping_type: data.capping_type,
-            branch_type: data.branch_type,
             
             
             bill: { connect: { id: Number(data.bill_id) } },
@@ -145,14 +180,14 @@ return prisma.$transaction(async (tx) => {
       photos: data.photos
     ? {
         create: {
-            sidewalk_before: data.photos.fotoCalcadaAntes,
-            sketch: data.photos.fotoCroqui,
-            front_house: data.photos.fotoFrenteImovel,
-            street_sign: data.photos.fotoPlacaRua,
-            mechanical_protection: data.photos.fotoProtecaoMecanica,
-            provisional: data.photos.fotoProvisorio,
-            cut_branch: data.photos.fotoRamalCortado,
-            exposed_branch: data.photos.fotoRamalExposto,
+            sidewalk_before: data.photos.sidewalk_before,
+            sketch: data.photos.sketch,
+            front_house: data.photos.front_house,
+            street_sign: data.photos.street_sign,
+            mechanical_protection: data.photos.mechanical_protection,
+            provisional: data.photos.provisional,
+            cut_branch: data.photos.cut_branch,
+            exposed_branch: data.photos.exposed_branch,
         },
     }
     : undefined,
@@ -166,7 +201,7 @@ return prisma.$transaction(async (tx) => {
                     })),
                 },
                 street_data: {
-                    create: map_street_data(data)
+                    create: map_street_data(data.street_data)
                 },
                 trenches: {
                     create: (data.trenches || []).map((v) => ({
@@ -224,6 +259,7 @@ async function get_rdo_by_bill_id(bill_id) {
             photos: true,
             trenches: true,
             welds: true,
+            street_data : true
         },
     });
 }

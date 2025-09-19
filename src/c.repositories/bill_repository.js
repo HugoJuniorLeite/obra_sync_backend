@@ -97,7 +97,7 @@ async function change_status_bill(data, bill_id) {
 
 
 async function dispatch_bill(data, bill_id) {
-   console.log(data, bill_id, "repo");
+   console.log(data, "dispatch");
   try {
     const updateData = {};
 
