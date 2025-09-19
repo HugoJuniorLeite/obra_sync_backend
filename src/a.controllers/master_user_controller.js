@@ -2,7 +2,7 @@ import master_user_service from "../b.services/master_user_service.js";
 
 async function validate_master_user(req, res) {
     const email = req.body.email
-   
+   console.log(req.body, "validate");
     if(!email){
       throw new Error("É obrigatório informar o email");
             }
@@ -17,6 +17,7 @@ async function validate_master_user(req, res) {
 
 async function validate_token_controller(req, res) {
   const {email, token_access} = req.body;
+console.log(req.body, "auth");
 
   try {
    const token = await master_user_service.validate_token(email, token_access)

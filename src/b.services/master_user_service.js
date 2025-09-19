@@ -9,6 +9,7 @@ async function validateMasterUser(email) {
         throw new Error("Por favor informe um email!");
         }
     const master_user_exists = await master_user_repository.verify_master_exists(email);
+       
 if (!master_user_exists) {
     throw new Error("Usuário não encontrado, entre em contato com o suporte");
 }

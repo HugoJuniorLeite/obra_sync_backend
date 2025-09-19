@@ -10,7 +10,7 @@ async function is_first_access(id) {
        }
 }
 
-async function compare_password(id) {
+async function compare_password(id, old_password) {
     if (!old_password) {
         throw new Error("Dados iválidos");
         }
@@ -30,7 +30,7 @@ async function update_first_access(id) {
     try {
        return prisma.employee.update({
         where: {id: Number(id)},
-        data:{ first_access: false}
+        data:{ first_access: true}
        }) 
     } catch (error) {
        throw new Error(error.message); 
@@ -42,7 +42,7 @@ async function change_password_repository(id, new_password) {
     try {
         return prisma.employee.update({
 where : {id: Number(id)},
-data: {passord_hash: new_password},
+data: {password_hash: new_password},
         })
     } catch (error) {
         throw new Error(error.message);

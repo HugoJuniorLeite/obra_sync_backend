@@ -32,10 +32,28 @@ async function is_first_access_controller(req, res) {
     }
 }
 
+async function compare_password_controller(req, res) {
+    const {cpf, password} = req.body;
+if (!cpf || !password) {
+    throw new Error("Dados inválidos!");
+    }
+    try {
+      const token = await auth_service.compare_password(cpf, password);
+res.status(200).send({token: token, message: "Login realizado com sucesso!"})
+    } catch (error) {
+        return res.status(404).json({
+            success: false,
+            message: error.message || "Erro inesperado"
+        });
+    }
+}
+
 async function change_password_controller(req, res) {
     const {cpf, old_password, new_password} = req.body
-    if (!old_password || new_password) {
-        throw new Error("Dados inseridos são inválidos");
+    console.log(req.body);
+    
+    if (!old_password || !new_password) {
+        throw new Error("Dados inseridos são inválidos Controller");
         }
     try {
 await auth_service.change_password_service(cpf, old_password, new_password)
@@ -46,7 +64,7 @@ res.status(200).send("Senha alterada com sucesso!");
 }
 
 const auth_controller = {
-    is_first_access_controller, change_password_controller
+    is_first_access_controller, change_password_controller, compare_password_controller
 };
 
 export default auth_controller;

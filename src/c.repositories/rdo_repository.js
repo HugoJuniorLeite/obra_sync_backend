@@ -140,7 +140,7 @@ function map_street_data(data) {
   //   Rua_direita: 'Right',
   left_number : data.Numero_esquerda,
   //   Numero_esquerda: '4',
-  center_number : data. Numero_centro,
+  center_number : data.Numero_centro,
   //   Numero_centro: '3',
   right_number : data.Numero_direita
   //   Numero_direita: '5',
