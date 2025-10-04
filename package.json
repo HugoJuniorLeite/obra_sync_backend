@@ -1,0 +1,50 @@
+{
+  "name": "obra_sync_backend",
+  "version": "1.0.0",
+  "description": "ObraSync is a smart field management tool for organizing daily reports (RDO), tracking services, and syncing construction site activities in real time.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "seed": "node prisma/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HugoJuniorLeite/obra_sync_backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/HugoJuniorLeite/obra_sync_backend/issues"
+  },
+  "homepage": "https://github.com/HugoJuniorLeite/obra_sync_backend#readme",
+  "dependencies": {
+    "@prisma/client": "^6.13.0",
+    "@supabase/supabase-js": "^2.56.1",
+    "adm-zip": "^0.5.16",
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "fetch": "^1.1.0",
+    "fs": "^0.0.1-security",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "jszip": "^3.10.1",
+    "multer": "^2.0.2",
+    "multiparty": "^4.2.3",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.5",
+    "nodemon": "^3.1.10",
+    "pdfkit": "^0.17.2",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.13.0"
+  }
+}

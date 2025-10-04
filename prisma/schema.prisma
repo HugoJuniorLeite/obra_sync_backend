@@ -1,0 +1,341 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model master {
+  id              Int       @id @default(autoincrement())
+  name            String
+  email           String    @unique
+  cpf             String    @unique
+  token_access    String?
+  code_expires_at DateTime?
+  code_used       Boolean   @default(false)
+  created_at      DateTime  @default(now())
+  active          Boolean   @default(true)
+}
+
+model firm {
+  id       Int       @id @default(autoincrement())
+  name     String
+  email    String    @unique
+  cnpj     String    @unique
+  active   Boolean   @default(true)
+  projects project[]
+}
+
+model occupation {
+  id                        Int                  @id @default(autoincrement())
+  name                      String               @unique
+  description_of_occupation String
+  dangerousness             Boolean
+  active                    Boolean
+  salary                    Float
+  total_salary              Float
+  employees                 employee[]
+  services                  occupation_service[]
+}
+
+model service {
+  id          Int                  @id @default(autoincrement())
+  name        String
+  description String
+  price       Decimal              @db.Decimal(16, 2)
+  project_id  Int
+  active      Boolean              @default(true)
+  bills       bill[]
+  occupations occupation_service[]
+  project     project              @relation(fields: [project_id], references: [id])
+}
+
+model bill {
+  id                   Int               @id @default(autoincrement())
+  customer_id          Int
+  customer_address_id  Int
+  extension_address_id Int
+  consultant_id        Int
+  project_id           Int
+  service_id           Int
+  technical_id         Int?
+  scheduled_at         DateTime?
+  service_completed_at DateTime?
+  service_started_at   DateTime?
+  note                 String?
+  detail               String?
+  status               bill_status?      @default(aberta)
+  created_at           DateTime?         @default(now()) @db.Timestamp(6)
+  consultant           consultant        @relation(fields: [consultant_id], references: [id])
+  customer_address     customer_address  @relation(fields: [customer_address_id], references: [id])
+  customer             customer          @relation(fields: [customer_id], references: [id])
+  extension_address    extension_address @relation(fields: [extension_address_id], references: [id])
+  project              project           @relation(fields: [project_id], references: [id])
+  service              service           @relation(fields: [service_id], references: [id])
+  technical            employee?         @relation(fields: [technical_id], references: [id])
+  daily_reports        daily_report[]    @relation("bill_reports")
+  
+  @@map("bill")
+}
+
+
+
+model project {
+  id                   Int            @id @default(autoincrement())
+  name                 String
+  number_contract      String         @unique
+  description          String
+  estimated_price      Decimal        @db.Decimal(16, 2)
+  start_date           DateTime
+  estimated_end_date   DateTime
+  status               status_project @default(planned)
+  created_at           DateTime       @default(now())
+  updated_at           DateTime       @updatedAt
+  firm_id              Int
+  responsible_contract String
+  active               Boolean        @default(true)
+  bill                 bill[]
+  firm                 firm           @relation(fields: [firm_id], references: [id])
+  project_team         project_team[]
+  services             service[]
+  @@index([start_date, estimated_end_date])
+}
+
+model phone {
+  id          Int      @id @default(autoincrement())
+  phoneNumber String
+  employee_id Int
+  active      Boolean  @default(true)
+  employee    employee @relation(fields: [employee_id], references: [id])
+
+  @@map("phone")
+}
+
+model cnh {
+  id                    Int      @id @default(autoincrement())
+  employee_id           Int
+  number_license        String
+  validity              DateTime @db.Date
+  first_drivers_license DateTime @db.Date
+  category_cnh          String?
+  active                Boolean  @default(true)
+  employee              employee @relation(fields: [employee_id], references: [id])
+
+  @@map("cnh")
+}
+
+model project_team {
+  id          Int      @id @default(autoincrement())
+  project_id  Int
+  employee_id Int
+  active      Boolean  @default(true)
+  employee    employee @relation(fields: [employee_id], references: [id])
+  project     project  @relation(fields: [project_id], references: [id])
+
+  @@map("project_team")
+}
+
+model address {
+  id              Int      @id @default(autoincrement())
+  zip_code        String?
+  street_name     String?
+  number_of_house Int
+  city            String
+  state           String
+  country         String
+  employee_id     Int      @unique
+  neighborhood    String?
+  active          Boolean  @default(true)
+  employee        employee @relation(fields: [employee_id], references: [id])
+
+  @@map("address")
+}
+
+model customer {
+  id               Int                 @id @default(autoincrement())
+  name             String
+  phone            String
+  bills            bill[]
+  addresses        customer_address[]
+  extensionAddress extension_address[]
+
+  @@map("customer")
+}
+
+model customer_address {
+  id           Int      @id @default(autoincrement())
+  zip_code     String
+  street       String
+  neighborhood String
+  city         String
+  state        String
+  customer_id  Int      @map("customer_id")
+  number       Int
+  bills        bill[]
+  customer     customer @relation(fields: [customer_id], references: [id])
+
+  @@map("customer_address")
+}
+
+model extension_address {
+  id           Int      @id @default(autoincrement())
+  zip_code     String
+  street       String
+  neighborhood String
+  city         String
+  state        String
+  customer_id  Int      @map("customer_id")
+  number       Int
+  bills        bill[]
+  customer     customer @relation(fields: [customer_id], references: [id])
+
+  @@map("extension_address")
+}
+
+model consultant {
+  id    Int    @id @default(autoincrement())
+  name  String
+  phone String
+  bills bill[]
+
+  @@map("consultant")
+}
+
+model employee {
+  id              Int            @id @default(autoincrement())
+  name            String
+  date_of_birth   DateTime       @db.Date
+  rg              String
+  cpf             String         @unique
+  drivers_license Boolean
+  occupation_id   Int
+  admission_date  DateTime       @db.Date
+  password_hash   String?
+  active          Boolean        @default(true)
+  first_access    Boolean        @default(false)
+  address         address?
+  cnhs            cnh[]
+  occupation      occupation     @relation(fields: [occupation_id], references: [id])
+  phones          phone[]
+  project_team    project_team[]
+  bill            bill[]
+
+  @@map("employee")
+}
+
+model occupation_service {
+  occupation_id Int
+  service_id    Int
+  occupation    occupation @relation(fields: [occupation_id], references: [id])
+  service       service    @relation(fields: [service_id], references: [id])
+
+  @@id([occupation_id, service_id])
+}
+
+enum status_project {
+  planned
+  active
+  completed
+  canceled
+}
+
+model street_data {
+  id        Int      @id @default(autoincrement())
+  name      String
+  data      Json
+  daily_report daily_report?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model daily_report {
+  id                    Int         @id @default(autoincrement())
+  pipe_branch_diameter  String
+  pipe_network_diameter String
+  signal_tape           Boolean
+  round_tachao          Boolean
+  capping_type          String
+  branch_type           String
+  cut_location          String
+  branch_material       String
+  network_material      String
+  branch_position       String
+  network_pressure      String
+  flow_valve_type       Boolean @default(false)
+  mechanical_protection Boolean
+  cut_branch            String
+  created_at            DateTime    @default(now())
+  components            component[]
+  photos                photo[]
+  welds                 weld[]
+  trenches              trench[]
+  bill                  bill        @relation("bill_reports", fields: [bill_id], references: [id])
+  bill_id               Int
+  streetDataId  Int?    @unique    
+  street_data   street_data? @relation(fields: [streetDataId], references: [id])
+}
+
+model component {
+  id           Int    @id @default(autoincrement())
+  name         String
+  size         String
+  manufacturer String
+  batch        String
+
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
+}
+
+model photo {
+  id                    Int     @id @default(autoincrement())
+  sidewalk_before       String?
+  sketch                String?
+  front_house           String?
+  street_sign           String?
+  mechanical_protection String?
+  provisional           String?
+  cut_branch            String?
+  exposed_branch        String?
+  tachao                String?
+
+  daily_report    daily_report @relation(fields: [daily_report_id], references: [id])
+  daily_report_id       Int    @unique     
+}
+
+model weld {
+  id           Int     @id @default(autoincrement())
+  weld_number  String
+  component    String
+  approved     Boolean
+  cooling_time String
+
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
+}
+
+model trench {
+  id         Int    @id @default(autoincrement())
+  length     Int
+  width      Int
+  depth      Int
+  floor_type String
+
+  daily_report    daily_report? @relation(fields: [daily_report_id], references: [id])
+  daily_report_id Int?
+}
+
+enum bill_status {
+  aberta
+  despachada
+  aceita
+  em_deslocamento @map("em deslocamento")
+  em_atendimento  @map("em atendimento")
+  executada
+  nao_executada   @map("não executada")
+  devolvida
+  cancelada
+  reprogramada
+}
