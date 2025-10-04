@@ -1,7 +1,7 @@
 // import { PrismaClient } from '../generated/prisma/index.js';
-import { PrismaClient } from '../../generated/prisma/index.js';
+// import { PrismaClient } from '../../generated/prisma/index.js';
 
-
+import { PrismaClient } from "../src/generated/prisma";
 const prisma = new PrismaClient();
 
 async function main() {
