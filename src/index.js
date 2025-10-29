@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "https://obra-sync-front.onrender.com", // Frontend no Render
-    "http://localhost:5173",                // Permitir local para testes
+    // "http://localhost:5173",                // Permitir local para testes
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
